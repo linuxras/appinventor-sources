@@ -13,14 +13,24 @@ import com.google.appinventor.client.OdeAsyncCallback;
 import com.google.appinventor.client.explorer.project.Project;
 import com.google.appinventor.client.utils.Uploader;
 import com.google.appinventor.client.youngandroid.TextValidators;
+import com.google.appinventor.client.widgets.LabeledTextBox;
+import com.google.appinventor.client.widgets.Validator;
 import com.google.appinventor.shared.rpc.ServerLayout;
 import com.google.appinventor.shared.rpc.UploadResponse;
 import com.google.appinventor.shared.rpc.project.UserProject;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.CheckBox;
 
 /**
  * Wizard for uploading previously archived (downloaded) projects.
@@ -41,9 +51,67 @@ public class ProjectUploadWizard extends Wizard {
     upload.setName(ServerLayout.UPLOAD_PROJECT_ARCHIVE_FORM_ELEMENT);
     upload.getElement().setAttribute("accept", PROJECT_ARCHIVE_EXTENSION);
     setStylePrimaryName("ode-DialogBox");
+    LabeledTextBox projectPackageNameTextBox = new LabeledTextBox(MESSAGES.projectPackageNameLabel(), new Validator() {
+      @Override
+      public boolean validate(String value) {
+        errorMessage = TextValidators.getPackageErrorMessage(value);
+        if (errorMessage.length()>0){
+          disableOkButton();
+          return false;
+        }
+        errorMessage = "";
+        enableOkButton();
+        return true;
+      }
+
+      @Override
+      public String getErrorMessage() {
+        return errorMessage;
+      }
+    });
+  //Set initially read-only so user can proceed with default behavior without interaction
+    projectPackageNameTextBox.setReadOnly(true);
+
+    //Handle the Enter and Esc keys in the textbox
+    projectPackageNameTextBox.getTextBox().addKeyDownHandler(new KeyDownHandler() {
+      @Override
+      public void onKeyDown(KeyDownEvent event) {
+        int keyCode = event.getNativeKeyCode();
+        if (keyCode == KeyCodes.KEY_ENTER) {
+          handleOkClick();
+        } else if (keyCode == KeyCodes.KEY_ESCAPE) {
+          handleCancelClick();
+        }
+      }
+    });
+
+    //Handle validation of the given packageName
+    projectPackageNameTextBox.getTextBox().addKeyUpHandler(new KeyUpHandler() {
+      @Override
+      public void onKeyUp(KeyUpEvent event) { //Validate the text each time a key is lifted
+        projectPackageNameTextBox.validate();
+      }
+    });
+
+    CheckBox projectDefaultPackageName = new CheckBox(MESSAGES.projectDefaultPackageNameLabel());
+    projectDefaultPackageName.setValue(true);
+    projectDefaultPackageName.addClickHandler(new ClickHandler() {
+      @Override
+      public void onClick(ClickEvent event) {
+        boolean useDefaultPackageName = ((CheckBox) event.getSource()).getValue();
+        projectPackageNameTextBox.setReadOnly(useDefaultPackageName);
+        if(useDefaultPackageName) {
+          enableOkButton();
+        } else {
+          projectPackageNameTextBox.validate();
+        }
+      }
+    });
     VerticalPanel panel = new VerticalPanel();
     panel.setVerticalAlignment(VerticalPanel.ALIGN_MIDDLE);
     panel.add(upload);
+    panel.add(projectDefaultPackageName);
+    panel.add(projectPackageNameTextBox);
     addPage(panel);
 
     // Create finish command (upload a project archive)
@@ -51,6 +119,10 @@ public class ProjectUploadWizard extends Wizard {
       @Override
       public void execute() {
         String filename = upload.getFilename();
+        boolean useDefault = projectDefaultPackageName.getValue();
+        String tmpPkg = projectPackageNameTextBox.getText();
+        final String packageName = !useDefault && 
+            TextValidators.isValidAppPackageName(tmpPkg) ? tmpPkg : "";
         if (filename.endsWith(PROJECT_ARCHIVE_EXTENSION)) {
           // Strip extension and leading path off filename. We need to support both Unix ('/') and
           // Windows ('\\') path separators. File.pathSeparator is not available in GWT.
@@ -65,12 +137,12 @@ public class ProjectUploadWizard extends Wizard {
             new RequestNewProjectNameWizard(new RequestProjectNewNameInterface() {
               @Override
               public void getNewName(String name) {
-                upload(upload, name);
+                upload(upload, name, packageName);
               }
             }, filename, true);
   
           } else {
-            upload(upload, filename);
+            upload(upload, filename, packageName);
           }
         } else {
           Window.alert(MESSAGES.notProjectArchiveError());
@@ -80,10 +152,10 @@ public class ProjectUploadWizard extends Wizard {
     });
   }
   
-  private void upload(FileUpload upload, String filename) {
+  private void upload(FileUpload upload, String filename, String packageName) {
     String uploadUrl = GWT.getModuleBaseURL() + ServerLayout.UPLOAD_SERVLET + "/"
         + ServerLayout.UPLOAD_PROJECT + "/" + filename;
-    Uploader.getInstance().upload(upload, uploadUrl,
+    Uploader.getInstance().upload(upload, uploadUrl, packageName,
         new OdeAsyncCallback<UploadResponse>(
         // failure message
         MESSAGES.projectUploadError()) {
@@ -117,11 +189,11 @@ public class ProjectUploadWizard extends Wizard {
   public void show() {
     super.show();
     // Wizard size (having it resize between page changes is quite annoying)
-    int width = 320;
-    int height = 40;
+    int width = 340;
+    int height = 120;
     this.center();
 
     setPixelSize(width, height);
-    super.setPagePanelHeight(40);
+    super.setPagePanelHeight(160);
   }
 }

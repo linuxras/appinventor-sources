@@ -44,6 +44,10 @@ public final class TextValidators {
           "float", "native", "super", "while");
 
   protected static final List<String> SCHEME_NAMES = Arrays.asList("begin", "def", "foreach", "forrange", "JavaStringUtils", "quote");
+  
+  private static final String VALID_APP_PACKAGE = 
+            "^(?:[a-zA-Z]+(?:\\d*[a-zA-Z_]*)*)(?:\\\\.[a-zA-Z]+(?:\\\\d*[a-zA-Z_]*)*)"+
+                "(?:\\.[a-zA-Z]+(?:\\d*[a-zA-Z_]*)*)+$";
 
   // This class should never be instantiated.
   private TextValidators() {}
@@ -192,6 +196,13 @@ public final class TextValidators {
    */
   public static boolean isValidLengthFilename(String filename){
     return !(filename.length() > MAX_FILENAME_SIZE || filename.length() < MIN_FILENAME_SIZE);
+  }
+
+  public static boolean isValidAppPackageName(String packageName) {
+      return packageName != null && packageName.matches(VALID_APP_PACKAGE);
+  }
+  public static String getPackageErrorMessage(String packageName) {
+      return isValidAppPackageName(packageName) ? "" : MESSAGES.malformedPackageNameError();
   }
 
   /**

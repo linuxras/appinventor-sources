@@ -54,6 +54,26 @@ public interface FileImporter {
   UserProject importProject(String userId, String projectName,
                             InputStream uploadedFileStream, @Nullable String projectHistory)
       throws FileImporterException, IOException;
+  
+  /**
+   * Creates the project on the server and imports its content. Sets the project
+   * qualifiedName to the provided {@code packageName} the project
+   * history with the provided {@code projectHistory} value.
+   *
+   * @param userId the userId
+   * @param projectName
+   * @param uploadedFileStream project archive file
+   * @param packageName the optionally provide fully qualified package id
+   * @param projectHistory the optionally specially formatted project history
+   *        string, or null
+   * @return the UserProject
+   * @throws FileImporterException if there is an error importing
+   * @throws IOException if any file operation fails
+   */
+  UserProject importProject(String userId, String projectName,
+                            InputStream uploadedFileStream, 
+                            @Nullable String packageName, @Nullable String projectHistory)
+      throws FileImporterException, IOException;
 
   /**
    * Adds the file to the project on the server and imports its content.

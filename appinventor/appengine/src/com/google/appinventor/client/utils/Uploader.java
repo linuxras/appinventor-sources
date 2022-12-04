@@ -6,6 +6,7 @@
 
 package com.google.appinventor.client.utils;
 
+import com.google.appinventor.shared.rpc.ServerLayout;
 import com.google.appinventor.shared.rpc.UploadResponse;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FileUpload;
@@ -14,6 +15,8 @@ import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormSubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormSubmitEvent;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Hidden;
 
 /**
  * Utility class to upload files to the server.
@@ -98,4 +101,33 @@ public final class Uploader {
     form.setAction(uploadUrl);
     form.submit();
   }
+  
+  /**
+   * Uploads the given file with user defined package.
+   *
+   * @param upload  file upload widget containing file information
+   * @param uploadUrl  URL to upload the file to
+   * @param packageName  Package to use for new project
+   */
+  public final void upload(FileUpload upload, String uploadUrl,
+      String packageName, AsyncCallback<UploadResponse> callback) {
+    this.callback = callback;
+    //If we have a none empty packageName we send it along to the server
+    if(packageName != null && !packageName.isEmpty()) {
+      VerticalPanel hiddenPanel = new VerticalPanel();
+      hiddenPanel.setSize("0px", "0px");
+      hiddenPanel.setVisible(false);
+      hiddenPanel.add(upload);
+      Hidden pn = new Hidden(ServerLayout.UPLOAD_PROJECT_PACKAGE_FORM_ELEMENT);
+      pn.setValue(packageName);
+      hiddenPanel.add(pn);
+    
+      form.setWidget(hiddenPanel);
+    } else {
+      //Default behavior
+      form.setWidget(upload);
+    }
+    form.setAction(uploadUrl);
+    form.submit();
+  }  
 }

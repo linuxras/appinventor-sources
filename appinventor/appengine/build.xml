@@ -254,6 +254,7 @@
     <copy todir="${build.war.dir}/WEB-INF/lib" file="${build.dir}/common/CommonVersion.jar"/>
     <copy todir="${build.war.dir}/WEB-INF/lib" file="${build.dir}/components/CommonConstants.jar"/>
     <!-- external libs -->
+    <copy todir="${build.war.dir}/WEB-INF/lib" file="${lib.dir}/commons-io/commons-io-2.0.1.jar" />
     <copy todir="${build.war.dir}/WEB-INF/lib" file="${lib.dir}/commons-fileupload/commons-fileupload-1.2.2.jar" />
     <copy todir="${build.war.dir}/WEB-INF/lib" file="${lib.dir}/findbugs/jsr305.jar" />
     <copy todir="${build.war.dir}/WEB-INF/lib" file="${lib.dir}/guava/guava-20.0.jar" />

@@ -73,6 +73,16 @@ public abstract class CommonProjectService {
   public abstract long copyProject(String userId, long oldProjectId, String newName);
 
   /**
+   * Copies a project with a new name and custom package.
+   *
+   * @param userId the user id
+   * @param oldProjectId  old project ID
+   * @param newName new project name
+   * @param packageName new project package
+   */
+  public abstract long copyProject(String userId, long oldProjectId, String newName, String packageName);
+  
+  /**
    * Deletes a project.
    *
    * @param userId the user id

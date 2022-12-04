@@ -137,6 +137,15 @@ public class LabeledTextBox extends Composite {
   public TextBox getTextBox() {
     return textbox;
   }
+  /**
+   * Set whether the textbox is readonly
+   *
+   * @param readonly {@code true} to make the textbox editable, {@code false} to
+   *                 disable input.
+   */
+  public void setReadOnly(boolean readonly) {
+    textbox.setReadOnly(readonly);
+  }
 
   /**
    * Returns the error message resulting from a specific validation error

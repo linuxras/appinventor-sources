@@ -17,6 +17,8 @@ import com.google.appinventor.shared.rpc.project.ProjectNode;
 import com.google.appinventor.shared.rpc.project.ProjectRootNode;
 import com.google.appinventor.shared.rpc.project.UserProject;
 import com.google.appinventor.client.widgets.Validator;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -32,6 +34,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import java.util.Collections;
@@ -72,6 +75,8 @@ public final class CopyYoungAndroidProjectCommand extends ChainableCommand {
 
     // UI elements
     private final LabeledTextBox newNameTextBox;
+    private final LabeledTextBox packageNameTextBox;
+    private final CheckBox useDefault;
 
     /**
      * Creates a new dialog to get new project name.
@@ -168,6 +173,61 @@ public final class CopyYoungAndroidProjectCommand extends ChainableCommand {
         }
       });
       contentPanel.add(newNameTextBox);
+      packageNameTextBox = new LabeledTextBox(MESSAGES.projectPackageNameLabel(), new Validator() {
+        @Override
+        public boolean validate(String value) {
+          errorMessage = TextValidators.getPackageErrorMessage(value);
+          return !(errorMessage.length()>0);
+        }
+
+        @Override
+        public String getErrorMessage() {
+          return errorMessage;
+        }
+      });
+    //Set initially read-only so user can proceed with default behavior without interaction
+      packageNameTextBox.setReadOnly(true);
+
+      //Handle the Enter and Esc keys in the textbox
+      packageNameTextBox.getTextBox().addKeyDownHandler(new KeyDownHandler() {
+        @Override
+        public void onKeyDown(KeyDownEvent event) {
+          int keyCode = event.getNativeKeyCode();
+          if (keyCode == KeyCodes.KEY_ENTER) {
+            handleOkClick(oldProjectNode);
+          } else if (keyCode == KeyCodes.KEY_ESCAPE) {
+            hide();
+          }
+        }
+      });
+
+      //Handle validation of the given packageName
+      packageNameTextBox.getTextBox().addKeyUpHandler(new KeyUpHandler() {
+        @Override
+        public void onKeyUp(KeyUpEvent event) { //Validate the text each time a key is lifted
+          packageNameTextBox.validate();
+        }
+      });
+
+      useDefault = new CheckBox(MESSAGES.projectDefaultPackageNameLabel());
+      useDefault.setValue(true);
+      useDefault.addClickHandler(new ClickHandler() {
+        @Override
+        public void onClick(ClickEvent event) {
+          boolean useDefaultPackageName = ((CheckBox) event.getSource()).getValue();
+          packageNameTextBox.setReadOnly(useDefaultPackageName);
+          if(!useDefaultPackageName) {
+            packageNameTextBox.validate();
+          }
+        }
+      });
+      if(!checkpoint) {
+        contentPanel.add(useDefault);
+        contentPanel.add(packageNameTextBox);
+      } else {
+        useDefault.setVisible(false);
+        packageNameTextBox.setVisible(false);
+      }
 
       HorizontalPanel buttonPanel = new HorizontalPanel();
       Button cancelButton = new Button(MESSAGES.cancelButton());
@@ -196,10 +256,23 @@ public final class CopyYoungAndroidProjectCommand extends ChainableCommand {
 
     private void handleOkClick(ProjectRootNode oldProjectNode) {
       String newProjectName = newNameTextBox.getText();
+      String packageName = packageNameTextBox.getText();
+      boolean useDefaultPackage = useDefault.getValue();
       if (TextValidators.checkNewProjectName(newProjectName) 
             == TextValidators.ProjectNameStatus.SUCCESS) {
-        hide();
-        copyProjectAction(oldProjectNode, newProjectName);
+        
+        if(!checkpoint && !useDefaultPackage) {
+          if(TextValidators.isValidAppPackageName(packageName)) {
+            hide();
+            copyProjectAction(oldProjectNode, newProjectName, packageName);
+          } else {
+            packageNameTextBox.setFocus(true);
+            packageNameTextBox.selectAll();
+          }
+        } else {
+          hide();
+          copyProjectAction(oldProjectNode, newProjectName, null);
+        }
       } else {
         newNameTextBox.setFocus(true);
         newNameTextBox.selectAll();
@@ -240,7 +313,7 @@ public final class CopyYoungAndroidProjectCommand extends ChainableCommand {
      *
      * @param newName the new project name
      */
-    protected void copyProjectAction(ProjectRootNode oldProjectNode, String newName) {
+    protected void copyProjectAction(ProjectRootNode oldProjectNode, String newName, String packageName) {
       final Ode ode = Ode.getInstance();
 
       OdeAsyncCallback<UserProject> callback = new OdeAsyncCallback<UserProject>(
@@ -257,7 +330,11 @@ public final class CopyYoungAndroidProjectCommand extends ChainableCommand {
       };
 
       // Create new copy on the backend
-      ode.getProjectService().copyProject(oldProjectNode.getProjectId(), newName, callback);
+      if(packageName != null && !packageName.isEmpty()) {
+        ode.getProjectService().copyProject(oldProjectNode.getProjectId(), newName, packageName, callback);
+      } else {
+        ode.getProjectService().copyProject(oldProjectNode.getProjectId(), newName, callback);
+      }
     }
 
     @Override

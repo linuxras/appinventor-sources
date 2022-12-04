@@ -181,6 +181,11 @@ public class ServerLayout {
    * Name of the form element to upload project archives.
    */
   public static final String UPLOAD_PROJECT_ARCHIVE_FORM_ELEMENT = "uploadProjectArchive";
+  
+  /**
+   * Name of the form element for packageName when uploading projects
+   */
+  public static final String UPLOAD_PROJECT_PACKAGE_FORM_ELEMENT = "uploadProjectPackage";
 
   /**
    * Name of the form element to upload component archives.

@@ -156,6 +156,111 @@ public final class FileImporterImpl implements FileImporter {
     long projectId = storageIo.createProject(userId, project, settings);
     return storageIo.getUserProject(userId, projectId);
   }
+  
+  @Override
+  public UserProject importProject(String userId, String projectName,
+                                   InputStream uploadedFileStream, 
+                                   @Nullable String packageName, @Nullable String projectHistory)
+      throws FileImporterException, IOException {
+    // The projectName parameter has already been validated, including checking for an
+    // existing project with the same name. (See TextValidators.checkNewProjectName).
+
+    // Begin creating the project.
+    Project project = new Project(projectName);
+    project.setProjectType(YoungAndroidProjectNode.YOUNG_ANDROID_PROJECT_TYPE);
+
+    // As we process the ZipEntry for each file, we'll adjust the directory structure so that it is
+    // appropriate for this user.
+    // Here we get the information (such as the qualified form name) that we'll need to do that.
+    String qualifiedFormName;
+    if(packageName != null && !packageName.isEmpty()) {
+      LOG.info("Found packageName for project upload: " + packageName);
+      qualifiedFormName = packageName;
+    } else {
+      qualifiedFormName = StringUtils.getQualifiedFormName(
+          storageIo.getUser(userId).getUserEmail(), projectName);
+    }
+        
+    String srcDirectory = YoungAndroidProjectService.getSourceDirectory(qualifiedFormName);
+
+    ZipInputStream zin = new ZipInputStream(uploadedFileStream);
+    boolean isProjectArchive = false;  // have we found at least one project properties file?
+    try {
+      // Extract files
+      while (true) {
+        ZipEntry entry;
+        try {
+          entry = zin.getNextEntry();
+          if (entry == null) {
+            break;
+          }
+        } catch (ZipException e) {
+          // The uploaded file is not a valid zip file
+          LOG.log(Level.SEVERE, "Invalid Project Archive Format", e);
+          throw new FileImporterException(UploadResponse.Status.NOT_PROJECT_ARCHIVE);
+        }
+
+        if (!entry.isDirectory()) {
+          String fileName = entry.getName();
+
+          if (fileName.equals(YoungAndroidProjectService.PROJECT_PROPERTIES_FILE_NAME)) {
+            // The content for the youngandroidproject/project.properties file must be regenerated
+            // so that it contains the correct entries for "main" and "name", which are dependent on
+            // the projectName and qualifiedFormName.
+            String content = new YoungAndroidSettingsBuilder()
+                .setProjectName(projectName)
+                .setQualifiedFormName(qualifiedFormName)
+                .toProperties();
+            project.addTextFile(new TextFile(fileName, content));
+            isProjectArchive = true;
+
+          } else if (fileName.equals(FileExporter.REMIX_INFORMATION_FILE_PATH) ||
+              fileName.equals(StorageUtil.ANDROID_KEYSTORE_FILENAME)) {
+            // If the remix information file is present, we ignore it. In the past, a remix
+            // information file was saved in the zip when project source was downloaded and
+            // retrieved from the zip when it was uploaded. However, we no longer do that because
+            // we don't have a way to verify that the contents of the remix information file is
+            // accurate during the upload.
+            // If a keystore file is present we ignore that too for now, since
+            // we don't have per-project keystores. The only way to get such a
+            // source zip at the moment is using the admin functionality to
+            // download another user's project source.
+            continue;
+
+          } else {
+
+            if (fileName.startsWith(YoungAndroidProjectService.SRC_FOLDER)) {
+              // For files within the src folder, we need to update the directory that we put files
+              // in. Adjust the fileName so that it corresponds to this project's package.
+              fileName = srcDirectory + '/' + StorageUtil.basename(fileName);
+            }
+
+            // Get the file content from the ZipEntry.
+            ByteArrayOutputStream contentStream = new ByteArrayOutputStream();
+            ByteStreams.copy(zin, contentStream);
+
+            project.addRawFile(new RawFile(fileName, contentStream.toByteArray()));
+          }
+        }
+      }
+    } finally {
+      zin.close();
+    }
+
+    if (!isProjectArchive) {
+      // The uploaded file seems to be a valid zip file, but it doesn't contain the project
+      // properties file.
+      throw new FileImporterException(UploadResponse.Status.NOT_PROJECT_ARCHIVE);
+    }
+
+    // Set project history if provided
+    if (projectHistory != null) {
+      project.setProjectHistory(projectHistory);
+    }
+    String settings = new YoungAndroidSettingsBuilder().build();
+    long projectId = storageIo.createProject(userId, project, settings);
+    return storageIo.getUserProject(userId, projectId);
+  }
 
   @VisibleForTesting
   public long importFile(String userId, long projectId, String fileName,

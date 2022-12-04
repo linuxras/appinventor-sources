@@ -27,9 +27,12 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.CheckBox;
 
 
 /**
@@ -40,6 +43,9 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public final class NewYoungAndroidProjectWizard extends NewProjectWizard {
   // UI element for project name
   private LabeledTextBox projectNameTextBox;
+  private LabeledTextBox projectPackageNameTextBox;
+  private CheckBox projectDefaultPackageName;
+  private boolean useDefaultPackageName = true;
 
   /**
    * Creates a new YoungAndroid project wizard.
@@ -74,7 +80,9 @@ public final class NewYoungAndroidProjectWizard extends NewProjectWizard {
       public void onKeyDown(KeyDownEvent event) {
         int keyCode = event.getNativeKeyCode();
         if (keyCode == KeyCodes.KEY_ENTER) {
-          handleOkClick();
+          if(useDefaultPackageName) {
+            handleOkClick();
+          }
         } else if (keyCode == KeyCodes.KEY_ESCAPE) {
           handleCancelClick();
         }
@@ -85,12 +93,76 @@ public final class NewYoungAndroidProjectWizard extends NewProjectWizard {
       @Override
       public void onKeyUp(KeyUpEvent event) { //Validate the text each time a key is lifted
         projectNameTextBox.validate();
+        if(useDefaultPackageName) {
+          projectPackageNameTextBox.setText(StringUtils.getProjectPackage(
+              Ode.getInstance().getUser().getUserEmail(), projectNameTextBox.getText()));
+        }
       }
     });
 
+    projectPackageNameTextBox = new LabeledTextBox(MESSAGES.projectPackageNameLabel(), new Validator() {
+      @Override
+      public boolean validate(String value) {
+        errorMessage = TextValidators.getPackageErrorMessage(value);
+        if (errorMessage.length()>0){
+          disableOkButton();
+          return false;
+        }
+        errorMessage = "";
+        enableOkButton();
+        return true;
+      }
+
+      @Override
+      public String getErrorMessage() {
+        return errorMessage;
+      }
+    });
+    //Set initially read-only so user can proceed with default behavior without interaction
+    projectPackageNameTextBox.setReadOnly(useDefaultPackageName);
+
+    projectPackageNameTextBox.getTextBox().addKeyDownHandler(new KeyDownHandler() {
+      @Override
+      public void onKeyDown(KeyDownEvent event) {
+        int keyCode = event.getNativeKeyCode();
+        if (keyCode == KeyCodes.KEY_ENTER) {
+          handleOkClick();
+        } else if (keyCode == KeyCodes.KEY_ESCAPE) {
+          handleCancelClick();
+        }
+      }
+    });
+
+    projectPackageNameTextBox.getTextBox().addKeyUpHandler(new KeyUpHandler() {
+      @Override
+      public void onKeyUp(KeyUpEvent event) { //Validate the text each time a key is lifted
+        projectPackageNameTextBox.validate();
+      }
+    });
+
+    projectDefaultPackageName = new CheckBox(MESSAGES.projectDefaultPackageNameLabel());
+    projectDefaultPackageName.setValue(useDefaultPackageName);
+    //Handle clicks on checkbox
+    projectDefaultPackageName.addClickHandler(new ClickHandler() {
+      @Override
+      public void onClick(ClickEvent event) {
+        useDefaultPackageName = ((CheckBox) event.getSource()).getValue();
+        projectPackageNameTextBox.setReadOnly(useDefaultPackageName);
+        if(useDefaultPackageName) {
+          enableOkButton();
+        }
+        else
+        {
+          projectNameTextBox.validate();
+          projectPackageNameTextBox.validate();
+        }
+      }
+    });
     VerticalPanel page = new VerticalPanel();
 
     page.add(projectNameTextBox);
+    page.add(projectDefaultPackageName);
+    page.add(projectPackageNameTextBox);
     addPage(page);
 
     // Create cancel command handler. This handler
@@ -114,13 +186,18 @@ public final class NewYoungAndroidProjectWizard extends NewProjectWizard {
       public void execute() {
         String projectName = projectNameTextBox.getText().trim();
         projectName = projectName.replaceAll("( )+", " ").replace(" ", "_");
+        String packageName = projectPackageNameTextBox.getText().trim();
+        packageName = packageName.replaceAll("( )+", " ").replace(" ", "_");
         if (TextValidators.checkNewProjectName(projectName) 
               == TextValidators.ProjectNameStatus.SUCCESS) {
-          String packageName = StringUtils.getProjectPackage(
-              Ode.getInstance().getUser().getUserEmail(), projectName);
-          NewYoungAndroidProjectParameters parameters = new NewYoungAndroidProjectParameters(
+          if(useDefaultPackageName) {
+            packageName = StringUtils.getProjectPackage(
+                Ode.getInstance().getUser().getUserEmail(), projectName);
+          }
+          if(TextValidators.isValidAppPackageName(packageName)) {
+            NewYoungAndroidProjectParameters parameters = new NewYoungAndroidProjectParameters(
               packageName);
-          NewProjectCommand callbackCommand = new NewProjectCommand() {
+            NewProjectCommand callbackCommand = new NewProjectCommand() {
               @Override
               public void execute(final Project project) {
                 Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
@@ -136,9 +213,14 @@ public final class NewYoungAndroidProjectWizard extends NewProjectWizard {
               }
             };
 
-          createNewProject(YoungAndroidProjectNode.YOUNG_ANDROID_PROJECT_TYPE, projectName,
+            createNewProject(YoungAndroidProjectNode.YOUNG_ANDROID_PROJECT_TYPE, projectName,
               parameters, callbackCommand);
-          Tracking.trackEvent(Tracking.PROJECT_EVENT, Tracking.PROJECT_ACTION_NEW_YA, projectName);
+            Tracking.trackEvent(Tracking.PROJECT_EVENT, Tracking.PROJECT_ACTION_NEW_YA, projectName);          
+          } else {
+            show();
+            center();
+            return;
+          }
         } else {
           show();
           center();
@@ -153,11 +235,11 @@ public final class NewYoungAndroidProjectWizard extends NewProjectWizard {
     super.show();
     // Wizard size (having it resize between page changes is quite annoying)
     int width = 340;
-    int height = 40;
+    int height = 180;
     this.center();
 
     setPixelSize(width, height);
-    super.setPagePanelHeight(85);
+    super.setPagePanelHeight(200);
 
     DeferredCommand.addCommand(new Command() {
       public void execute() {

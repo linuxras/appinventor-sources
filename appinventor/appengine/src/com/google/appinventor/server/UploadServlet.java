@@ -6,6 +6,7 @@
 
 package com.google.appinventor.server;
 
+import com.google.appinventor.common.utils.StringUtils;
 import com.google.appinventor.server.util.CacheHeaders;
 import com.google.appinventor.server.util.CacheHeadersImpl;
 import com.google.appinventor.shared.rpc.ServerLayout;
@@ -13,13 +14,17 @@ import com.google.appinventor.shared.rpc.UploadResponse;
 import com.google.appinventor.shared.rpc.component.Component;
 import com.google.appinventor.shared.rpc.project.UserProject;
 
+import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileItemIterator;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.List;
+import java.util.Iterator;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -92,16 +97,32 @@ public class UploadServlet extends OdeServlet {
       if (uploadKind.equals(ServerLayout.UPLOAD_PROJECT)) {
         uriComponents = uri.split("/", SPLIT_LIMIT_PROJECT_SOURCE);
         String projectName = uriComponents[PROJECT_TITLE_INDEX];
+        
         InputStream uploadedStream;
+        String packageName = null;
+        String[] names = {ServerLayout.UPLOAD_PROJECT_ARCHIVE_FORM_ELEMENT, 
+            ServerLayout.UPLOAD_PROJECT_PACKAGE_FORM_ELEMENT};
         try {
-          uploadedStream = getRequestStream(req, ServerLayout.UPLOAD_PROJECT_ARCHIVE_FORM_ELEMENT);
+          List<Object> results = getRequestData(req, names);
+          //uploadedStream = getRequestStream(req, ServerLayout.UPLOAD_PROJECT_ARCHIVE_FORM_ELEMENT);
+          uploadedStream = (InputStream)results.get(0);
+          if(results.size() == 2) {
+            packageName = (String)results.get(1);
+          }
         } catch (Exception e) {
           throw CrashReport.createAndLogError(LOG, req, null, e);
         }
 
+
         try {
-          UserProject userProject = fileImporter.importProject(userInfoProvider.getUserId(),
-              projectName, uploadedStream);
+          UserProject userProject;
+          if(packageName != null && !packageName.isEmpty()) {
+            userProject = fileImporter.importProject(userInfoProvider.getUserId(),
+              projectName, uploadedStream, packageName, null);
+          } else {
+            userProject = fileImporter.importProject(userInfoProvider.getUserId(),
+                projectName, uploadedStream);
+          }
           String info = userProject.toString();
           uploadResponse = new UploadResponse(UploadResponse.Status.SUCCESS, 0, info);
         } catch (FileImporterException e) {
@@ -190,6 +211,31 @@ public class UploadServlet extends OdeServlet {
     }
 
     throw new IllegalArgumentException("Field " + expectedFieldName + " not found in upload");
+  }
+  private List<Object> getRequestData(HttpServletRequest req, String[] expectedFieldNames) 
+      throws Exception {
+    List<String> validNames = java.util.Arrays.asList(expectedFieldNames);
+    List<Object> rv = new java.util.ArrayList<Object>();
+    DiskFileItemFactory factory = new DiskFileItemFactory();
+    ServletFileUpload upload = new ServletFileUpload(factory);
+    List<FileItem> items = upload.parseRequest(req);
+    Iterator<FileItem> iter = items.iterator();
+    while (iter.hasNext()) {
+      FileItem item = iter.next();
+      if (validNames.contains(item.getFieldName())) {
+        if(item.isFormField()) {
+          rv.add(1, item.getString());
+        } else {
+          InputStream fileStream = item.getInputStream();
+          rv.add(0, fileStream);
+        }
+      }
+    }
+    if(!rv.isEmpty()) {
+      return rv;
+    }
+    throw new IllegalArgumentException("Fields "+ java.util.Arrays.toString(expectedFieldNames) + 
+        " not found with upload");
   }
 
   /**

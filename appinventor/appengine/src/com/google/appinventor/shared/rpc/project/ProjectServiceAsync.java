@@ -46,6 +46,11 @@ public interface ProjectServiceAsync {
   void copyProject(long oldProjectId, String newName, AsyncCallback<UserProject> callback);
 
   /**
+   * @see ProjectService#copyProject(long, String, String)
+   */
+  void copyProject(long oldProjectId, String newName, String packageName, AsyncCallback<UserProject> callback);
+  
+  /**
    * @see ProjectService#moveToTrash(long)
    */
   void moveToTrash(long projectId, AsyncCallback<UserProject> callback);

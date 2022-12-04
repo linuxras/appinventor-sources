@@ -310,6 +310,64 @@ public final class YoungAndroidProjectService extends CommonProjectService {
   }
 
   @Override
+  public long copyProject(String userId, long oldProjectId, String newName, String packageName) {
+    String oldName = storageIo.getProjectName(userId, oldProjectId);
+    String oldProjectSettings = storageIo.loadProjectSettings(userId, oldProjectId);
+    String oldProjectHistory = storageIo.getProjectHistory(userId, oldProjectId);
+    YoungAndroidSettingsBuilder builder = new YoungAndroidSettingsBuilder(
+        new Settings(JSON_PARSER, oldProjectSettings));
+
+    Project newProject = new Project(newName);
+    newProject.setProjectType(YoungAndroidProjectNode.YOUNG_ANDROID_PROJECT_TYPE);
+    newProject.setProjectHistory(oldProjectHistory);
+
+    // Get the old project's source files and add them to new project, modifying where necessary.
+    for (String oldSourceFileName : storageIo.getProjectSourceFiles(userId, oldProjectId)) {
+      String newSourceFileName;
+
+      String newContents = null;
+      if (oldSourceFileName.equals(PROJECT_PROPERTIES_FILE_NAME)) {
+        // This is the project properties file. The name of the file doesn't contain the old
+        // project name.
+        newSourceFileName = oldSourceFileName;
+        // For the contents of the project properties file, generate the file with the new project
+        // name and qualified name.
+        String qualifiedFormName;
+        if(packageName != null && !packageName.isEmpty()) {
+          qualifiedFormName = packageName;
+        } else {
+          qualifiedFormName = StringUtils.getQualifiedFormName(
+              storageIo.getUser(userId).getUserEmail(), newName);
+        }
+            
+        builder.setProjectName(newName).setQualifiedFormName(qualifiedFormName);
+        newContents = builder.toProperties();
+      } else {
+        // This is some file other than the project properties file.
+        // oldSourceFileName may contain the old project name as a path segment, surrounded by /.
+        // Replace the old name with the new name.
+        newSourceFileName = StringUtils.replaceLastOccurrence(oldSourceFileName,
+            "/" + oldName + "/", "/" + newName + "/");
+      }
+
+      if (newContents != null) {
+        // We've determined (above) that the contents of the file must change for the new project.
+        // Use newContents when adding the file to the new project.
+        newProject.addTextFile(new TextFile(newSourceFileName, newContents));
+      } else {
+        // If we get here, we know that the contents of the file can just be copied from the old
+        // project. Since it might be a binary file, we copy it as a raw file (that works for both
+        // text and binary files).
+        byte[] contents = storageIo.downloadRawFile(userId, oldProjectId, oldSourceFileName);
+        newProject.addRawFile(new RawFile(newSourceFileName, contents));
+      }
+    }
+
+    // Create the new project and return the new project's id.
+    return storageIo.createProject(userId, newProject, builder.build());
+  }
+  
+  @Override
   public ProjectRootNode getRootNode(String userId, long projectId) {
     // Create root, assets, and source nodes (they are mocked nodes as they don't really
     // have to exist like this on the file system)
