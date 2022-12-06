@@ -46,7 +46,7 @@ public final class TextValidators {
   protected static final List<String> SCHEME_NAMES = Arrays.asList("begin", "def", "foreach", "forrange", "JavaStringUtils", "quote");
   
   private static final String VALID_APP_PACKAGE = 
-            "^(?:[a-zA-Z]+(?:\\d*[a-zA-Z_]*)*)(?:\\\\.[a-zA-Z]+(?:\\\\d*[a-zA-Z_]*)*)"+
+            "^(?:[a-zA-Z]+(?:\\d*[a-zA-Z_]*)*)(?:\\.[a-zA-Z]+(?:\\d*[a-zA-Z_]*)*)"+
                 "(?:\\.[a-zA-Z]+(?:\\d*[a-zA-Z_]*)*)+$";
 
   // This class should never be instantiated.
