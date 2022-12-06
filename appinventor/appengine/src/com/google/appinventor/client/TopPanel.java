@@ -60,6 +60,7 @@ public class TopPanel extends Composite {
 
   private static final String SIGNOUT_URL = "/ode/_logout";
   private static final String LOGO_IMAGE_URL = "/static/images/codi_long.png";
+  private static final String DARKMODE_LOGO_IMAGE_URL = "/static/images/logo2.png";
 
   private static final String WINDOW_OPEN_FEATURES = "menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=yes";
   private static final String WINDOW_OPEN_LOCATION = "_ai2";
@@ -234,15 +235,20 @@ public class TopPanel extends Composite {
     // Logo is a link to App Inv homepage. Add timestamp to logo url
     // to get around browsers that agressively cache the image! This
     // same trick is used in StorageUtil.getFilePath().
-    Image logo = new Image(LOGO_IMAGE_URL + "?t=" + System.currentTimeMillis());
-    logo.setSize("180px", "40px");
+    boolean isDarkMode = ode.getUserDarkModeTheme();
+    Image logo = new Image(isDarkMode ? DARKMODE_LOGO_IMAGE_URL : LOGO_IMAGE_URL + "?t=" + System.currentTimeMillis());
+    if(isDarkMode) {
+      logo.setSize("104px", "40px");
+    } else {
+      logo.setSize("180px", "40px");
+    }
     logo.setStyleName("ode-Logo");
     String logoUrl = ode.getSystemConfig().getLogoUrl();
     if (!Strings.isNullOrEmpty(logoUrl)) {
       logo.addClickHandler(new WindowOpenClickHandler(logoUrl));
     }
     panel.add(logo);
-    panel.setCellWidth(logo, "230px");
+    panel.setCellWidth(logo, isDarkMode ? "180" : "230px");
     panel.setCellHorizontalAlignment(logo, HorizontalPanel.ALIGN_LEFT);
     panel.setCellVerticalAlignment(logo, HorizontalPanel.ALIGN_MIDDLE);
   }

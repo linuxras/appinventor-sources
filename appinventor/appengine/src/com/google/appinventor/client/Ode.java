@@ -102,6 +102,11 @@ import com.google.gwt.http.client.Response;
 
 import com.google.gwt.resources.client.ImageResource;
 
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.ScriptElement;
+
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Event;
@@ -1118,6 +1123,10 @@ public class Ode implements EntryPoint {
     if (getUserDyslexicFont()) {
       RootPanel.get().addStyleName("dyslexic");
     }
+    if(getUserDarkModeTheme()) {
+      RootPanel.get().addStyleName("starynight");
+      setupDarkModeParticles();
+    }
 
     // There is no sure-fire way of preventing people from accidentally navigating away from ODE
     // (e.g. by hitting the Backspace key). What we do need though is to make sure that people will
@@ -1453,6 +1462,54 @@ public class Ode implements EntryPoint {
     userSettings.saveSettings(null);
   }
 
+  /**
+   * Returns user darkmode theme setting.
+   *
+   * @return user setting for darkmode
+   */
+  public static boolean getUserDarkModeTheme() {
+    String value = userSettings.getSettings(SettingsConstants.USER_GENERAL_SETTINGS).
+            getPropertyValue(SettingsConstants.USER_DARKMODE_THEME);
+    return Boolean.parseBoolean(value);
+  }
+
+  /**
+   * Set user darkmode theme setting.
+   *
+   * @param darkmode new value for the user darkmode theme
+   */
+  public static void setUserDarkModeTheme(boolean darkmode) {
+    userSettings.getSettings(SettingsConstants.USER_GENERAL_SETTINGS).
+            changePropertyValue(SettingsConstants.USER_DARKMODE_THEME,
+                    "" + darkmode);
+    userSettings.saveSettings(new Command() {
+        @Override
+        public void execute() {
+          // Reload for the new darkmode styles to take effect. We
+          // do this here because we need to make sure that
+          // the user settings were saved before we terminate
+          // this browsing session. This is particularly important
+          // for Firefox
+          Window.Location.reload();
+        }
+      });
+  }
+
+  private void setupDarkModeParticles() {
+    Document document = Document.get();
+    //Create the div to hold the background
+    DivElement stars = document.createDivElement();
+    stars.setPropertyString("id", "particles-js");
+    Element bodyElement = RootPanel.get().getBodyElement();
+    bodyElement.insertFirst(stars);
+    
+    //Create and load the config javascript file for particles
+    ScriptElement script = document.createScriptElement();
+    script.setAttribute("type", "text/javascript");
+    script.setSrc("static/js/particles_conf.js");
+    bodyElement.appendChild(script);
+  }
+  
   /**
    * Helper method to create push buttons.
    *

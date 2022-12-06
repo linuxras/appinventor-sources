@@ -93,6 +93,7 @@ public class TopToolbar extends Composite {
   private static final String WIDGET_NAME_SETTINGS = "Settings";
   private static final String WIDGET_NAME_AUTOLOAD = "Autoload Last Project";
   private static final String WIDGET_NAME_DYSLEXIC_FONT = "DyslexicFont";
+  private static final String WIDGET_NAME_DARKMODE_THEME = "DarkModeTheme";
   private static final String WIDGET_NAME_HELP = "Help";
   private static final String WIDGET_NAME_ABOUT = "About";
   private static final String WIDGET_NAME_LIBRARY = "Library";
@@ -343,6 +344,13 @@ public class TopToolbar extends Composite {
     } else {
       settingsItems.add(new DropDownItem(WIDGET_NAME_DYSLEXIC_FONT,  MESSAGES.enableOpenDyslexic(),
           new SetFontDyslexicAction()));
+    }
+    if(Ode.getUserDarkModeTheme()) {
+      settingsItems.add(new DropDownItem(WIDGET_NAME_DARKMODE_THEME, MESSAGES.disableDarkModeTheme(),
+          new DisableDarkModeAction()));
+    } else {
+      settingsItems.add(new DropDownItem(WIDGET_NAME_DARKMODE_THEME, MESSAGES.enableDarkModeTheme(),
+          new EnableDarkModeAction()));
     }
     refreshMenu(settingsDropDown, settingsItems);
   }
@@ -826,6 +834,20 @@ public class TopToolbar extends Composite {
       Ode.getInstance().setUserDyslexicFont(false);
       // Window.Location.reload();
       // Not: See above comment
+    }
+  }
+  
+  private static class EnableDarkModeAction implements Command {
+    @Override
+    public void execute() {
+		  Ode.getInstance().setUserDarkModeTheme(true);
+    }
+  }
+  
+  private static class DisableDarkModeAction implements Command {
+    @Override
+    public void execute() {
+      Ode.getInstance().setUserDarkModeTheme(false);
     }
   }
 
