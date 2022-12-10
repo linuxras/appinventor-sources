@@ -475,10 +475,16 @@ body.starynight {
 /* Overrides for gwt.css */
 
 .starynight .ode-SimplePaletteItem {
-  background-color: var(--light-bg-color); /* needed on Firefox */
+  background-color: var(--light-bg-color); 
   height: 15px;
   cursor: pointer;
   padding: 5px;
+}
+
+.starynight .ode-SimplePaletteItem.ode-SimplePaletteItem-selected,
+.starynight .ode-SimplePaletteItem.ode-SimplePaletteItem-selected .ode-SimplePaletteItem-caption {
+  background-color: var(--button-color); 
+  color: var(--text-dark-color);
 }
 
 .starynight .ode-PropertiesPanel {

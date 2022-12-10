@@ -774,6 +774,10 @@ body {
   padding: 5px;
 }
 
+.ode-SimplePaletteItem.ode-SimplePaletteItem-selected {
+  background-color: #d2e0a6; 
+}
+
 .ode-SimplePaletteItem-icon {
   height: 16px;
   width: 16px;
