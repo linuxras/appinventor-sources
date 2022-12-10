@@ -152,9 +152,9 @@ public final class YoungAndroidProjectService extends CommonProjectService {
    */
   @VisibleForTesting
   public static String getInitialFormPropertiesFileContents(String qualifiedName) {
-    final int lastDotPos = qualifiedName.lastIndexOf('.');
-    String packageName = qualifiedName.split("\\.")[2];
-    String formName = qualifiedName.substring(lastDotPos + 1);
+    String[] parts = qualifiedName.split("\\.");
+    String packageName = parts[(parts.length-2)];
+    String formName = parts[(parts.length-1)];
     // The initial Uuid is set to zero here since (as far as we know) we can't get random numbers
     // in ode.shared.  This shouldn't actually matter since all Uuid's are random int's anyway (and
     // 0 was randomly chosen, I promise).  The TODO(user) in MockComponent.java indicates that
