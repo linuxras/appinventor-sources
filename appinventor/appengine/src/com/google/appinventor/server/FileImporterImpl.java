@@ -175,7 +175,7 @@ public final class FileImporterImpl implements FileImporter {
     String qualifiedFormName;
     if(packageName != null && !packageName.isEmpty()) {
       LOG.info("Found packageName for project upload: " + packageName);
-      qualifiedFormName = packageName;
+      qualifiedFormName = packageName +".Screen1";
     } else {
       qualifiedFormName = StringUtils.getQualifiedFormName(
           storageIo.getUser(userId).getUserEmail(), projectName);

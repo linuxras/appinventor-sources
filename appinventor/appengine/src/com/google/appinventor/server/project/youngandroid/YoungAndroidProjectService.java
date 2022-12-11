@@ -334,7 +334,7 @@ public final class YoungAndroidProjectService extends CommonProjectService {
         // name and qualified name.
         String qualifiedFormName;
         if(packageName != null && !packageName.isEmpty()) {
-          qualifiedFormName = packageName;
+          qualifiedFormName = packageName+".Screen1";
         } else {
           qualifiedFormName = StringUtils.getQualifiedFormName(
               storageIo.getUser(userId).getUserEmail(), newName);
