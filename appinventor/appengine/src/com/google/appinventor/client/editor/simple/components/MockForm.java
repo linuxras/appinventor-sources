@@ -357,6 +357,8 @@ public final class MockForm extends MockContainer {
   private static final String PROPERTY_NAME_ACCENT_COLOR = "AccentColor";
   private static final String PROPERTY_NAME_THEME = "Theme";
   private static final String PROPERTY_NAME_DEFAULTFILESCOPE = "DefaultFileScope";
+  private static final String PROPERTY_NAME_SPLASH_SCREEN_IMAGE = "SplashScreenImage";
+  private static final String PROPERTY_NAME_SPLASH_SCREEN_COLOR = "SplashScreenColor";
 
   // Form UI components
   AbsolutePanel formWidget;
@@ -759,7 +761,9 @@ public final class MockForm extends MockContainer {
       case PROPERTY_NAME_PRIMARY_COLOR_DARK:
       case PROPERTY_NAME_ACCENT_COLOR:
       case PROPERTY_NAME_THEME:
-      case PROPERTY_NAME_DEFAULTFILESCOPE: {
+      case PROPERTY_NAME_DEFAULTFILESCOPE: 
+      case PROPERTY_NAME_SPLASH_SCREEN_IMAGE:
+      case PROPERTY_NAME_SPLASH_SCREEN_COLOR: {
         return editor.isScreen1();
       }
 
@@ -1049,6 +1053,28 @@ public final class MockForm extends MockContainer {
       editor.getProjectEditor().changeProjectSettingsProperty(
           SettingsConstants.PROJECT_YOUNG_ANDROID_SETTINGS,
           SettingsConstants.YOUNG_ANDROID_SETTINGS_DEFAULTFILESCOPE, defaultFileScope);
+    }
+  }
+  
+  private void setSplashScreenImage(String splashImage) {
+    // The SplashScreenImage property actually applies to the application and is only visible on Screen1.
+    // When we load a form that is not Screen1, this method will be called with the default value
+    // for icon (empty string). We need to ignore that.
+    if(editor.isScreen1()) {
+      editor.getProjectEditor().changeProjectSettingsProperty(
+          SettingsConstants.PROJECT_YOUNG_ANDROID_SETTINGS, 
+          SettingsConstants.YOUNG_ANDROID_SETTINGS_SPLASH_SCREEN_IMAGE, splashImage);
+    }
+  }
+  
+  private void setSplashScreenColor(String color) {
+    // The SplashScreenColor property actually applies to the application and is only visible on Screen1.
+    // When we load a form that is not Screen1, this method will be called with the default value
+    // for icon (empty string). We need to ignore that.
+    if(editor.isScreen1()) {
+      editor.getProjectEditor().changeProjectSettingsProperty(
+          SettingsConstants.PROJECT_YOUNG_ANDROID_SETTINGS,
+          SettingsConstants.YOUNG_ANDROID_SETTINGS_SPLASH_SCREEN_COLOR, color);
     }
   }
 
@@ -1418,6 +1444,10 @@ public final class MockForm extends MockContainer {
     } else if (propertyName.equals(PROPERTY_NAME_TITLEVISIBLE)) {
       setTitleVisibleProperty(newValue);
       refreshForm();
+    } else if (propertyName.equals(PROPERTY_NAME_SPLASH_SCREEN_IMAGE)) {
+      setSplashScreenImage(newValue);
+    } else if (propertyName.equals(PROPERTY_NAME_SPLASH_SCREEN_COLOR)) {
+      setSplashScreenColor(newValue);
     }
   }
 

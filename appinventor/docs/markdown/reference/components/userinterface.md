@@ -1103,6 +1103,12 @@ Top-level component containing all other components in the program.
    **Note:** This property appears on Screen1 only and controls the sizing for all screens in
  the app.
 
+{:id="Screen.SplashScreenColor" .color .wo .do} *SplashScreenColor*
+: This is the background color used for the Splash Screen Background.
+
+{:id="Screen.SplashScreenImage" .text .wo .do} *SplashScreenImage*
+: This is the image used as a splash screen on app launch.
+
 {:id="Screen.Theme" .text .wo .do} *Theme*
 : Selects the theme for the application. Theme can only be set at compile time and the Companion
  will approximate changes during live development. Possible options are:

@@ -144,6 +144,8 @@ public class Form extends AppInventorCompatActivity
       hexStringToInt(ComponentConstants.DEFAULT_PRIMARY_DARK_COLOR);
   private static final int DEFAULT_ACCENT_COLOR =
       hexStringToInt(ComponentConstants.DEFAULT_ACCENT_COLOR);
+  private static final int DEFAULT_SPLASH_SCREEN_COLOR =
+      hexStringToInt(ComponentConstants.DEFAULT_SPLASH_SCREEN_COLOR);
 
   private List<Component> allChildren = new ArrayList<>();
 
@@ -443,6 +445,8 @@ public class Form extends AppInventorCompatActivity
     OpenScreenAnimationAbstract(ScreenAnimation.Default);
     CloseScreenAnimationAbstract(ScreenAnimation.Default);
     DefaultFileScope(FileScope.App);
+    SplashScreenImage("");
+    SplashScreenColor(DEFAULT_SPLASH_SCREEN_COLOR);
   }
 
   @Override
@@ -2117,6 +2121,23 @@ public class Form extends AppInventorCompatActivity
     + "editing a project. Used as a teaching aid.")
   public void TutorialURL(String url) {
     // We don't actually do anything This property is stored in the
+    // project properties file
+  }
+  
+  @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_ASSET, defaultValue = "")
+  @SimpleProperty(userVisible = false, description = "This is the image used as a splash screen " +
+      "on app launch.", category = PropertyCategory.APPEARANCE)
+  public void SplashScreenImage(String image) {
+    // We don't actually do anything. This property is stored in the
+    // project properties file
+  }
+  
+  @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_COLOR,
+      defaultValue = ComponentConstants.DEFAULT_SPLASH_SCREEN_COLOR)
+  @SimpleProperty(userVisible = false, description = "This is the background color used " +
+      "for the Splash Screen Background.", category = PropertyCategory.APPEARANCE)
+  public void SplashScreenColor(int color) {
+    // We don't actually do anything. This property is stored in the
     // project properties file
   }
 

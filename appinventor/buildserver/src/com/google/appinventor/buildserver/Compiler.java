@@ -298,6 +298,9 @@ public final class Compiler {
       "Error: Your build failed because %s cannot be used as the application icon.\n";
   private static final String NO_USER_CODE_ERROR =
       "Error: No user code exists.\n";
+  private static final String SPLASH_ERROR =
+      "Error: Your build failed because %s cannot be used as the splash screen, " +
+      "you must select .png (recommended) or .jpg (acceptable)\n";
 
   static {
     List<String> aars = new ArrayList<>();
@@ -338,6 +341,7 @@ public final class Compiler {
   private final boolean isForCompanion;
   private final boolean isForEmulator;
   private final boolean includeDangerousPermissions;
+  private final boolean useSplashScreen;
   private final Project project;
   private final PrintStream out;
   private final PrintStream err;
@@ -869,6 +873,7 @@ public final class Compiler {
     String colorPrimary = project.getPrimaryColor();
     String colorPrimaryDark = project.getPrimaryColorDark();
     String colorAccent = project.getAccentColor();
+    String colorSplash = project.getSplashScreenColor();
     String theme = project.getTheme();
     String actionbar = project.getActionBar();
     String parentTheme;
@@ -898,6 +903,7 @@ public final class Compiler {
     colorPrimary = cleanColor(colorPrimary, true);
     colorPrimaryDark = cleanColor(colorPrimaryDark, true);
     colorAccent = cleanColor(colorAccent, true);
+    colorSplash = cleanColor(colorSplash, true);
     File colorsXml = new File(valuesDir, "colors" + suffix + ".xml");
     File stylesXml = new File(valuesDir, "styles" + suffix + ".xml");
     try {
@@ -913,6 +919,11 @@ public final class Compiler {
       out.write("<color name=\"colorAccent\">");
       out.write(colorAccent);
       out.write("</color>\n");
+      if(useSplashScreen && !colorSplash.isEmpty()) {
+        out.write("<color name=\"splashScreenBackgroundColor\">");
+        out.write(colorSplash);
+        out.write("</color>\n");
+      }
       out.write("</resources>\n");
       out.close();
       out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(stylesXml), "UTF-8"));
@@ -921,6 +932,12 @@ public final class Compiler {
 
       writeTheme(out, "AppTheme", parentTheme,
           suffix.isEmpty() ? 7 : Integer.parseInt(suffix.substring(2)));
+
+      if(useSplashScreen && suffix.isEmpty() && !isForCompanion) { //We only need this in the general style file
+        out.write("<style name=\"SplashScreenTheme\" parent=\"@style/AppTheme\">\n");
+        out.write("<item name=\"android:windowBackground\">@drawable/splash_screen</item>\n");
+        out.write("</style>\n");
+      }
       if (!isClassicTheme) {
         if (holo) {  // Handle Holo
           if (parentTheme.contains("Light")) {
@@ -1020,6 +1037,34 @@ public final class Compiler {
     }
     return true;
   }
+  
+//Writes splash_screen.xml to indicate application splashscreen image and background color
+ private boolean writeSplashScreenDrawable(File splashScreenDrawable) {
+   if(!useSplashScreen) {
+     return true;
+   }
+   String splashBg = project.getSplashScreenColor();
+   try {
+     BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(splashScreenDrawable), "UTF-8"));
+     out.write("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
+     out.write("<layer-list xmlns:android=\"http://schemas.android.com/apk/res/android\">\n");
+     if(splashBg.isEmpty()) {
+       out.write("  <item android:drawable=\"@android:color/white\"/>\n");
+     } else {
+       out.write("  <item android:drawable=\"@color/splashScreenBackgroundColor\"/>\n");
+     }  
+     out.write("  <item>\n");
+     out.write("    <bitmap android:gravity=\"center\" android:src=\"@drawable/ya_splash\"/>\n");
+     out.write("  </item>\n");
+     out.write("</layer-list>\n");
+     out.close();
+   } catch (IOException e) {
+     e.printStackTrace();
+     userErrors.print(String.format(ERROR_IN_STAGE, "ic launcher background"));
+     return false;
+   }
+   return true;
+ }
 
   /*
    * Creates an AndroidManifest.xml file needed for the Android application.
@@ -1185,7 +1230,9 @@ public final class Compiler {
         out.write("android:name=\"com.google.appinventor.components.runtime.multidex.MultiDexApplication\" ");
       }
       // Write theme info if we are not using the "Classic" theme (i.e., no theme)
-      if (true) {
+      if (useSplashScreen && !isForCompanion) {
+        out.write("android:theme=\"@style/SplashScreenTheme\" ");
+      } else {
 //      if (!"Classic".equalsIgnoreCase(project.getTheme())) {
         out.write("android:theme=\"@style/AppTheme\" ");
       }
@@ -1481,6 +1528,9 @@ public final class Compiler {
           mipmapDirectoriesForIcons, standardSizesForMipmaps, foregroundSizesForMipmaps)) {
         return false;
       }
+      if(!compiler.prepareSplashScreenImage(new File(drawableDir, "ya_splash.png"))) {
+        return false;
+      }
       if (reporter != null) {
         reporter.report(15);        // Have to call directly because we are in a
       }                             // Static context
@@ -1542,6 +1592,12 @@ public final class Compiler {
       out.println("________Generating adaptive icon background file");
       File icBackgroundColor = new File(styleDir, "ic_launcher_background.xml");
       if (!compiler.writeICLauncherBackground(icBackgroundColor)) {
+        return false;
+      }
+      
+      out.println("________Generating splash screen drawable file");
+      File splashScreenDrawable = new File(drawableDir, "splash_screen.xml");
+      if (!compiler.writeSplashScreenDrawable(splashScreenDrawable)) {
         return false;
       }
 
@@ -1802,6 +1858,7 @@ public final class Compiler {
     this.childProcessRamMb = childProcessMaxRam;
     this.dexCacheDir = dexCacheDir;
     this.reporter = reporter;
+    this.useSplashScreen = !project.getSplashScreenImage().isEmpty();
 
   }
 
@@ -2188,6 +2245,42 @@ public final class Compiler {
     return true;
   }
 
+  /*
+   * Loads the icon for the application, either a user provided one or the default one.
+   */
+  private boolean prepareSplashScreenImage(File outputPngFile) {
+    String userSpecifiedImage = Strings.nullToEmpty(project.getSplashScreenImage());
+    try {
+      BufferedImage splashImage;
+      if (!userSpecifiedImage.isEmpty()) {
+        File splashFile = new File(project.getAssetsDirectory(), userSpecifiedImage);
+        splashImage = ImageIO.read(splashFile);
+        if (splashImage == null) {
+          // This can happen if the splashFile isn't an image file.
+          // For example, splashImage is null if the file is a .wav file.
+          // This file should be a .png (recommended), .jpg (acceptable), .gif (avoid)
+          userErrors.print(String.format(SPLASH_ERROR, userSpecifiedImage));
+          return false;
+        }
+      } else {
+        // This should just return true here since this would mean useSpashScreen would be false anyway.
+        return true;
+      }
+      BufferedImage scaledImage = resizeImage(splashImage, 288, 288);
+
+      ImageIO.write(scaledImage, "png", outputPngFile);
+    } catch (Exception e) {
+      e.printStackTrace();
+      // If the user specified the icon, this is fatal.
+      if (!userSpecifiedImage.isEmpty()) {
+        userErrors.print(String.format(SPLASH_ERROR, userSpecifiedImage));
+        return false;
+      }
+    }
+
+    return true;
+  }
+  
   /**
    * Processes recursively the directory pointed at by {@code dir} and adds any class files
    * encountered to the {@code classes} set.

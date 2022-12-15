@@ -64,6 +64,8 @@ public class SettingsConstants {
   public static final String YOUNG_ANDROID_SETTINGS_THEME = "Theme";
   public static final String YOUNG_ANDROID_SETTINGS_PHONE_PREVIEW = "PhonePreview";
   public static final String YOUNG_ANDROID_SETTINGS_DEFAULTFILESCOPE = "DefaultFileScope";
+  public static final String YOUNG_ANDROID_SETTINGS_SPLASH_SCREEN_IMAGE = "SplashScreenImage";
+  public static final String YOUNG_ANDROID_SETTINGS_SPLASH_SCREEN_COLOR = "SplashScreenColor";
 
   /**
    * Settings for the Blocks editor.

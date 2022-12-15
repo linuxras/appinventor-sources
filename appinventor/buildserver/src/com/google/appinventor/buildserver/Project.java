@@ -97,6 +97,8 @@ public final class Project {
   private static final String COLOR_PRIMARYTAG = "color.primary";
   private static final String COLOR_PRIMARY_DARKTAG = "color.primary.dark";
   private static final String COLOR_ACCENTTAG = "color.accent";
+  private static final String SPLASH_IMAGE_TAG = "splash.image";
+  private static final String SPLASH_COLOR_TAG = "splash.color";
   private static final String DEFAULT_FILE_SCOPE = "defaultfilescope";
 
   private static final String DEFAULT_APP_NAME = "AI2 App"; // Do not leave it empty because even though it compiles
@@ -345,6 +347,32 @@ public final class Project {
    */
   public String getDefaultFileScope() {
     return properties.getProperty(DEFAULT_FILE_SCOPE);
+  }
+  
+  /**
+   * Returns the name of the splash screen image
+   * 
+   * @return splash image filename or empty string if not set
+   */
+  public String getSplashScreenImage() {
+    String splash = properties.getProperty(SPLASH_IMAGE_TAG);
+    if(splash == null) {
+      return "";
+    }
+    return splash;
+  }
+  
+  /**
+   * Return the background color for the splashscreen
+   * 
+   * @return splash background color or empty string if not set
+   */
+  public String getSplashScreenColor() {
+    String color = properties.getProperty(SPLASH_COLOR_TAG);
+    if(color == null) {
+      return "";
+    }
+    return color;
   }
 
   /**
