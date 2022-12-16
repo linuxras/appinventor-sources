@@ -217,6 +217,8 @@ public class Form extends AppInventorCompatActivity
   private static boolean sCompatibilityMode;
 
   private static boolean showListsAsJson;
+  
+  private boolean keepScreenOn;
 
   private final Set<String> permissions = new HashSet<String>();
 
@@ -393,6 +395,11 @@ public class Form extends AppInventorCompatActivity
     getWindow().setSoftInputMode(
         softInputMode | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
+    // Set KEEP_SCREEN_ON if enabled
+    if(keepScreenOn) {
+      super.maybeKeepScreenOn(keepScreenOn);
+    }
+    
     // Add application components to the form
     $define();
 
@@ -447,6 +454,7 @@ public class Form extends AppInventorCompatActivity
     DefaultFileScope(FileScope.App);
     SplashScreenImage("");
     SplashScreenColor(DEFAULT_SPLASH_SCREEN_COLOR);
+    KeepScreenOn(false);
   }
 
   @Override
@@ -2139,6 +2147,20 @@ public class Form extends AppInventorCompatActivity
   public void SplashScreenColor(int color) {
     // We don't actually do anything. This property is stored in the
     // project properties file
+  }
+  
+  @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_BOOLEAN,
+      defaultValue = "False")
+  @SimpleProperty(description = "Toggle Window flag KEEP_SCREEN_ON to keep the screen on and bright",
+  category = PropertyCategory.BEHAVIOR)
+  public void KeepScreenOn(boolean kso) {
+    keepScreenOn = kso;
+    super.maybeKeepScreenOn(keepScreenOn);
+  }
+  
+  @SimpleProperty()
+  public boolean KeepScreenOn() {
+    return keepScreenOn;
   }
 
   @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_SUBSET_JSON,

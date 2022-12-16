@@ -23,6 +23,7 @@ import static com.google.appinventor.shared.settings.SettingsConstants.YOUNG_AND
 import static com.google.appinventor.shared.settings.SettingsConstants.YOUNG_ANDROID_SETTINGS_VERSION_NAME;
 import static com.google.appinventor.shared.settings.SettingsConstants.YOUNG_ANDROID_SETTINGS_SPLASH_SCREEN_IMAGE;
 import static com.google.appinventor.shared.settings.SettingsConstants.YOUNG_ANDROID_SETTINGS_SPLASH_SCREEN_COLOR;
+import static com.google.appinventor.shared.settings.SettingsConstants.YOUNG_ANDROID_SETTINGS_KEEP_SCREEN_ON;
 import static com.google.appinventor.shared.youngandroid.YoungAndroidSourceAnalyzer.ASSETS_FOLDER;
 import static com.google.appinventor.shared.youngandroid.YoungAndroidSourceAnalyzer.SRC_FOLDER;
 
@@ -53,6 +54,7 @@ public class YoungAndroidSettingsBuilder {
   private String defaultFileScope = "App";
   private String splashScreenImage = "";
   private String splashScreenColor = "0";
+  private String keepScreenOn = "false";
 
   public YoungAndroidSettingsBuilder() {
   }
@@ -97,6 +99,8 @@ public class YoungAndroidSettingsBuilder {
         YOUNG_ANDROID_SETTINGS_SPLASH_SCREEN_IMAGE));
     splashScreenColor = Strings.nullToEmpty(settings.getSetting(PROJECT_YOUNG_ANDROID_SETTINGS,
         YOUNG_ANDROID_SETTINGS_SPLASH_SCREEN_COLOR));
+    keepScreenOn = Strings.nullToEmpty(settings.getSetting(PROJECT_YOUNG_ANDROID_SETTINGS,
+        YOUNG_ANDROID_SETTINGS_KEEP_SCREEN_ON));
   }
 
   /**
@@ -124,6 +128,7 @@ public class YoungAndroidSettingsBuilder {
     defaultFileScope = properties.getProperty("defaultfilescope", "");
     splashScreenImage = properties.getProperty("splash.image", "");
     splashScreenColor = properties.getProperty("splash.color", "");
+    keepScreenOn = properties.getProperty("keepScreenOn", "false");
   }
 
   public YoungAndroidSettingsBuilder setProjectName(String projectName) {
@@ -220,6 +225,11 @@ public class YoungAndroidSettingsBuilder {
     this.splashScreenColor = splashScreenColor;
     return this;
   }
+  
+  public YoungAndroidSettingsBuilder setKeepScreenOn(String keepScreenOn) {
+    this.keepScreenOn = keepScreenOn;
+    return this;
+  }
 
   /**
    * Convert the internal settings into a JSON structure.
@@ -245,6 +255,7 @@ public class YoungAndroidSettingsBuilder {
     object.put(YOUNG_ANDROID_SETTINGS_DEFAULTFILESCOPE, defaultFileScope);
     object.put(YOUNG_ANDROID_SETTINGS_SPLASH_SCREEN_IMAGE, splashScreenImage);
     object.put(YOUNG_ANDROID_SETTINGS_SPLASH_SCREEN_COLOR, splashScreenColor);
+    object.put(YOUNG_ANDROID_SETTINGS_KEEP_SCREEN_ON, keepScreenOn);
     JSONObject wrapper = new JSONObject();
     wrapper.put(PROJECT_YOUNG_ANDROID_SETTINGS, object);
     return wrapper.toString();
@@ -279,6 +290,7 @@ public class YoungAndroidSettingsBuilder {
     addPropertyIfSet(result, "defaultfilescope", defaultFileScope);
     addPropertyIfSet(result, "splash.image", splashScreenImage);
     addPropertyIfSet(result, "splash.color", splashScreenColor);
+    addPropertyIfSet(result, "keepScreenOn", keepScreenOn);
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     try {
       result.store(out, "");
@@ -325,6 +337,7 @@ public class YoungAndroidSettingsBuilder {
       result &= other.defaultFileScope.equals(defaultFileScope);
       result &= other.splashScreenImage.equals(splashScreenImage);
       result &= other.splashScreenColor.equals(splashScreenColor);
+      result &= other.keepScreenOn.equals(keepScreenOn);
       return result;
     }
     return false;

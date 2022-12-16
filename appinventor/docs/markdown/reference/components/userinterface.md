@@ -1051,6 +1051,9 @@ Top-level component containing all other components in the program.
  up to 1024x1024 pixels. Larger images may cause compiling or installing the app to fail.
  The build server will generate images of standard dimensions for Android devices.
 
+{:id="Screen.KeepScreenOn" .boolean} *KeepScreenOn*
+: Toggle Window flag KEEP_SCREEN_ON to keep the screen on and bright
+
 {:id="Screen.OpenScreenAnimation" .text} *OpenScreenAnimation*
 : Sets the animation type for the transition of this form opening.
 

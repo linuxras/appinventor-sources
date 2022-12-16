@@ -14,6 +14,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
@@ -357,6 +358,15 @@ public class AppInventorCompatActivity extends Activity implements AppCompatCall
       Log.d(LOG_TAG, "Setting classic mode from YAIL: " + newClassicMode);
       classicMode = newClassicMode;
       didSetClassicModeFromYail = true;
+    }
+  }
+  
+  @SuppressWarnings("WeakerAccess")
+  protected void maybeKeepScreenOn(boolean keepScreenOn) {
+    if(keepScreenOn) {
+      getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    } else {
+      getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
   }
 }

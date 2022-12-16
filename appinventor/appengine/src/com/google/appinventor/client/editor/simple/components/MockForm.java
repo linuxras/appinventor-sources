@@ -359,6 +359,7 @@ public final class MockForm extends MockContainer {
   private static final String PROPERTY_NAME_DEFAULTFILESCOPE = "DefaultFileScope";
   private static final String PROPERTY_NAME_SPLASH_SCREEN_IMAGE = "SplashScreenImage";
   private static final String PROPERTY_NAME_SPLASH_SCREEN_COLOR = "SplashScreenColor";
+  private static final String PROPERTY_NAME_KEEP_SCREEN_ON = "KeepScreenOn";
 
   // Form UI components
   AbsolutePanel formWidget;
@@ -1077,6 +1078,12 @@ public final class MockForm extends MockContainer {
           SettingsConstants.YOUNG_ANDROID_SETTINGS_SPLASH_SCREEN_COLOR, color);
     }
   }
+  
+  private void setKeepScreenOn(String keepScreenOn) {
+    editor.getProjectEditor().changeProjectSettingsProperty(
+        SettingsConstants.PROJECT_YOUNG_ANDROID_SETTINGS,
+        SettingsConstants.YOUNG_ANDROID_SETTINGS_KEEP_SCREEN_ON, keepScreenOn);
+  }
 
   /**
    * Forces a re-layout of the child components of the container.
@@ -1448,6 +1455,8 @@ public final class MockForm extends MockContainer {
       setSplashScreenImage(newValue);
     } else if (propertyName.equals(PROPERTY_NAME_SPLASH_SCREEN_COLOR)) {
       setSplashScreenColor(newValue);
+    } else if (propertyName.equals(PROPERTY_NAME_KEEP_SCREEN_ON)) {
+      setKeepScreenOn(newValue);
     }
   }
 

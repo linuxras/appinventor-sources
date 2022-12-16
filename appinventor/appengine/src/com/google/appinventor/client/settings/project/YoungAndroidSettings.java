@@ -87,5 +87,8 @@ public final class YoungAndroidSettings extends Settings {
     addProperty(new EditableProperty(this,
         SettingsConstants.YOUNG_ANDROID_SETTINGS_SPLASH_SCREEN_COLOR, "&HFFFFFFFF",
         EditableProperty.TYPE_INVISIBLE));
+    addProperty(new EditableProperty(this,
+        SettingsConstants.YOUNG_ANDROID_SETTINGS_KEEP_SCREEN_ON, "false",
+        EditableProperty.TYPE_INVISIBLE));
   }
 }
