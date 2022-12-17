@@ -99,7 +99,7 @@ public final class Project {
   private static final String COLOR_ACCENTTAG = "color.accent";
   private static final String SPLASH_IMAGE_TAG = "splash.image";
   private static final String SPLASH_COLOR_TAG = "splash.color";
-  private static final String CLEAR_TEXT_TRAFFIC_TAG = "clearTextTrafficPermitted";
+  private static final String CLEAR_TEXT_TRAFFIC_TAG = "cleartextTrafficPermitted";
   private static final String DEFAULT_FILE_SCOPE = "defaultfilescope";
 
   private static final String DEFAULT_APP_NAME = "AI2 App"; // Do not leave it empty because even though it compiles
