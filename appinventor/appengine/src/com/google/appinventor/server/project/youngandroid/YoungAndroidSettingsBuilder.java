@@ -24,6 +24,7 @@ import static com.google.appinventor.shared.settings.SettingsConstants.YOUNG_AND
 import static com.google.appinventor.shared.settings.SettingsConstants.YOUNG_ANDROID_SETTINGS_SPLASH_SCREEN_IMAGE;
 import static com.google.appinventor.shared.settings.SettingsConstants.YOUNG_ANDROID_SETTINGS_SPLASH_SCREEN_COLOR;
 import static com.google.appinventor.shared.settings.SettingsConstants.YOUNG_ANDROID_SETTINGS_KEEP_SCREEN_ON;
+import static com.google.appinventor.shared.settings.SettingsConstants.YOUNG_ANDROID_SETTINGS_CLEARTEXT_TRAFFIC;
 import static com.google.appinventor.shared.youngandroid.YoungAndroidSourceAnalyzer.ASSETS_FOLDER;
 import static com.google.appinventor.shared.youngandroid.YoungAndroidSourceAnalyzer.SRC_FOLDER;
 
@@ -55,6 +56,7 @@ public class YoungAndroidSettingsBuilder {
   private String splashScreenImage = "";
   private String splashScreenColor = "0";
   private String keepScreenOn = "false";
+  private String cleartextTrafficPermitted = "true";
 
   public YoungAndroidSettingsBuilder() {
   }
@@ -101,6 +103,8 @@ public class YoungAndroidSettingsBuilder {
         YOUNG_ANDROID_SETTINGS_SPLASH_SCREEN_COLOR));
     keepScreenOn = Strings.nullToEmpty(settings.getSetting(PROJECT_YOUNG_ANDROID_SETTINGS,
         YOUNG_ANDROID_SETTINGS_KEEP_SCREEN_ON));
+    cleartextTrafficPermitted = Strings.nullToEmpty(settings.getSetting(PROJECT_YOUNG_ANDROID_SETTINGS,
+        YOUNG_ANDROID_SETTINGS_CLEARTEXT_TRAFFIC));
   }
 
   /**
@@ -129,6 +133,7 @@ public class YoungAndroidSettingsBuilder {
     splashScreenImage = properties.getProperty("splash.image", "");
     splashScreenColor = properties.getProperty("splash.color", "");
     keepScreenOn = properties.getProperty("keepScreenOn", "false");
+    cleartextTrafficPermitted = properties.getProperty("cleartextTrafficPermitted", "true");
   }
 
   public YoungAndroidSettingsBuilder setProjectName(String projectName) {
@@ -230,6 +235,11 @@ public class YoungAndroidSettingsBuilder {
     this.keepScreenOn = keepScreenOn;
     return this;
   }
+  
+  public YoungAndroidSettingsBuilder setUseClearTextTraffic(String cleartextTrafficPermitted) {
+    this.cleartextTrafficPermitted = cleartextTrafficPermitted;
+    return this;
+  }
 
   /**
    * Convert the internal settings into a JSON structure.
@@ -256,6 +266,7 @@ public class YoungAndroidSettingsBuilder {
     object.put(YOUNG_ANDROID_SETTINGS_SPLASH_SCREEN_IMAGE, splashScreenImage);
     object.put(YOUNG_ANDROID_SETTINGS_SPLASH_SCREEN_COLOR, splashScreenColor);
     object.put(YOUNG_ANDROID_SETTINGS_KEEP_SCREEN_ON, keepScreenOn);
+    object.put(YOUNG_ANDROID_SETTINGS_CLEARTEXT_TRAFFIC, cleartextTrafficPermitted);
     JSONObject wrapper = new JSONObject();
     wrapper.put(PROJECT_YOUNG_ANDROID_SETTINGS, object);
     return wrapper.toString();
@@ -291,6 +302,7 @@ public class YoungAndroidSettingsBuilder {
     addPropertyIfSet(result, "splash.image", splashScreenImage);
     addPropertyIfSet(result, "splash.color", splashScreenColor);
     addPropertyIfSet(result, "keepScreenOn", keepScreenOn);
+    addPropertyIfSet(result, "cleartextTrafficPermitted", cleartextTrafficPermitted);
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     try {
       result.store(out, "");
@@ -338,6 +350,7 @@ public class YoungAndroidSettingsBuilder {
       result &= other.splashScreenImage.equals(splashScreenImage);
       result &= other.splashScreenColor.equals(splashScreenColor);
       result &= other.keepScreenOn.equals(keepScreenOn);
+      result &= other.cleartextTrafficPermitted.equals(cleartextTrafficPermitted);
       return result;
     }
     return false;

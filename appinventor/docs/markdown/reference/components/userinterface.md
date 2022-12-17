@@ -1137,6 +1137,9 @@ Top-level component containing all other components in the program.
  reasons, only tutorials hosted on http://appinventor.mit.edu or linked to from our URL
  shortener (http://appinv.us) may be used here. Other URLs will be silently ignored.
 
+{:id="Screen.UseClearTextTraffic" .boolean .wo .do} *UseClearTextTraffic*
+: Toggle cleartextTrafficPermitted network config flag
+
 {:id="Screen.VersionCode" .number .wo .do} *VersionCode*
 : An integer value which must be incremented each time a new Android Application Package File
  (APK) is created for the Google Play Store.

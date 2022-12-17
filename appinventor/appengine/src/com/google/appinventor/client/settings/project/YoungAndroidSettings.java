@@ -90,5 +90,8 @@ public final class YoungAndroidSettings extends Settings {
     addProperty(new EditableProperty(this,
         SettingsConstants.YOUNG_ANDROID_SETTINGS_KEEP_SCREEN_ON, "false",
         EditableProperty.TYPE_INVISIBLE));
+    addProperty(new EditableProperty(this,
+        SettingsConstants.YOUNG_ANDROID_SETTINGS_CLEARTEXT_TRAFFIC, "true",
+        EditableProperty.TYPE_INVISIBLE));
   }
 }

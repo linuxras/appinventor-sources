@@ -966,11 +966,12 @@ public final class Compiler {
   }
 
   private boolean createNetworkConfigXml(File configDir) {
+    boolean allowClearText = project.getClearTextTrafficPermitted();
     File networkConfig = new File(configDir, "network_security_config.xml");
     try (PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(networkConfig)))) {
       out.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
       out.println("<network-security-config>");
-      out.println("<base-config cleartextTrafficPermitted=\"true\">");
+      out.println("<base-config cleartextTrafficPermitted=\""+ Boolean.valueOf(allowClearText) + "\">");
       out.println("<trust-anchors>");
       out.println("<certificates src=\"system\"/>");
       out.println("</trust-anchors>");

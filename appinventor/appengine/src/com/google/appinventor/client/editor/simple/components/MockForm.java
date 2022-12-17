@@ -360,6 +360,7 @@ public final class MockForm extends MockContainer {
   private static final String PROPERTY_NAME_SPLASH_SCREEN_IMAGE = "SplashScreenImage";
   private static final String PROPERTY_NAME_SPLASH_SCREEN_COLOR = "SplashScreenColor";
   private static final String PROPERTY_NAME_KEEP_SCREEN_ON = "KeepScreenOn";
+  private static final String PROPERTY_NAME_CLEARTEXT_TRAFFIC = "UseClearTextTraffic";
 
   // Form UI components
   AbsolutePanel formWidget;
@@ -764,7 +765,8 @@ public final class MockForm extends MockContainer {
       case PROPERTY_NAME_THEME:
       case PROPERTY_NAME_DEFAULTFILESCOPE: 
       case PROPERTY_NAME_SPLASH_SCREEN_IMAGE:
-      case PROPERTY_NAME_SPLASH_SCREEN_COLOR: {
+      case PROPERTY_NAME_SPLASH_SCREEN_COLOR:
+      case PROPERTY_NAME_CLEARTEXT_TRAFFIC: {
         return editor.isScreen1();
       }
 
@@ -1083,6 +1085,14 @@ public final class MockForm extends MockContainer {
     editor.getProjectEditor().changeProjectSettingsProperty(
         SettingsConstants.PROJECT_YOUNG_ANDROID_SETTINGS,
         SettingsConstants.YOUNG_ANDROID_SETTINGS_KEEP_SCREEN_ON, keepScreenOn);
+  }
+  
+  private void setUseClearTextTraffic(String clearText) {
+    if(editor.isScreen1()) {
+      editor.getProjectEditor().changeProjectSettingsProperty(
+          SettingsConstants.PROJECT_YOUNG_ANDROID_SETTINGS,
+          SettingsConstants.YOUNG_ANDROID_SETTINGS_CLEARTEXT_TRAFFIC, clearText);
+    }
   }
 
   /**
@@ -1457,6 +1467,8 @@ public final class MockForm extends MockContainer {
       setSplashScreenColor(newValue);
     } else if (propertyName.equals(PROPERTY_NAME_KEEP_SCREEN_ON)) {
       setKeepScreenOn(newValue);
+    } else if(propertyName.equals(PROPERTY_NAME_CLEARTEXT_TRAFFIC)) {
+      setUseClearTextTraffic(newValue);
     }
   }
 

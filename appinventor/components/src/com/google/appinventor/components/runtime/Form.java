@@ -455,6 +455,7 @@ public class Form extends AppInventorCompatActivity
     SplashScreenImage("");
     SplashScreenColor(DEFAULT_SPLASH_SCREEN_COLOR);
     KeepScreenOn(false);
+    UseClearTextTraffic(true);
   }
 
   @Override
@@ -2161,6 +2162,13 @@ public class Form extends AppInventorCompatActivity
   @SimpleProperty()
   public boolean KeepScreenOn() {
     return keepScreenOn;
+  }
+  
+  @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_BOOLEAN, defaultValue = "True")
+  @SimpleProperty(userVisible = false, description = "Toggle cleartextTrafficPermitted network config flag",
+      category = PropertyCategory.BEHAVIOR)
+  public void UseClearTextTraffic(boolean clearText) {
+    //Do nothing as this is handled during app package
   }
 
   @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_SUBSET_JSON,
