@@ -235,6 +235,10 @@ body.starynight {
   background: none;
 }
 
+.starynight .ode-Logo {
+    margin: 2px 0px 2px 35px;
+}
+
 .starynight .ode-MainPanel {
     height: 100vh;
     width: 99%;
