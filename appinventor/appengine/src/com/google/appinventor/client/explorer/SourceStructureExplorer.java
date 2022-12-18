@@ -21,6 +21,7 @@ import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.user.client.Event;
 
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.TreeItem;
@@ -45,6 +46,7 @@ public class SourceStructureExplorer extends Composite {
   private final EventCaptureTree tree;
   private final TextButton renameButton;
   private final TextButton deleteButton;
+  private final HorizontalPanel buttonPanel;
 
   /**
    * This is a hack to work around the fact that for multiselect we need to have
@@ -135,11 +137,11 @@ public class SourceStructureExplorer extends Composite {
     });
 
     // Put a ScrollPanel around the tree.
-    ScrollPanel scrollPanel = new ScrollPanel(tree);
-    scrollPanel.setWidth("200px");  // wide enough to avoid a horizontal scrollbar most of the time
-    scrollPanel.setHeight("480px"); // approximately the same height as the viewer
+    //ScrollPanel scrollPanel = new ScrollPanel(tree);
+    //scrollPanel.setWidth("200px");  // wide enough to avoid a horizontal scrollbar most of the time
+    //scrollPanel.setHeight("480px"); // approximately the same height as the viewer
 
-    HorizontalPanel buttonPanel = new HorizontalPanel();
+    buttonPanel = new HorizontalPanel();
     buttonPanel.setStyleName("ode-PanelButtons");
     buttonPanel.setSpacing(4);
 
@@ -173,10 +175,13 @@ public class SourceStructureExplorer extends Composite {
     buttonPanel.setCellHorizontalAlignment(deleteButton, HorizontalPanel.ALIGN_LEFT);
 
     VerticalPanel panel = new VerticalPanel();
-    panel.add(scrollPanel);
+    //panel.add(scrollPanel);
+    panel.add(tree);
     panel.add(new Label());
-    panel.add(buttonPanel);
-    panel.setCellHorizontalAlignment(buttonPanel, HorizontalPanel.ALIGN_CENTER);
+    //panel.add(buttonPanel);
+    //panel.setCellHorizontalAlignment(buttonPanel, HorizontalPanel.ALIGN_CENTER);
+    panel.setWidth("200px");
+    //panel.setHeight("480px");
     initWidget(panel);
   }
 
@@ -310,5 +315,12 @@ public class SourceStructureExplorer extends Composite {
    */
   public void unselectItem(SourceStructureExplorerItem item) {
     selectItem(item, false);
+  }
+  
+  /**
+   * Retrieve the buttonPanel for display
+   */
+  public Widget getButtons() {
+    return buttonPanel;
   }
 }

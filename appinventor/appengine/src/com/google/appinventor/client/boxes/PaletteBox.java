@@ -38,5 +38,6 @@ public final class PaletteBox extends Box {
         false,     // startMinimized
         false,     // usePadding
         false);    // highlightCaption
+    setStyleName("ode-PaletteBox");
   }
 }

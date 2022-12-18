@@ -38,5 +38,6 @@ public final class PropertiesBox extends Box {
         false,  // startMinimized
         false,  // bodyPadding
         false); // highlightCaption
+    setStyleName("ode-PropertiesBox");
   }
 }

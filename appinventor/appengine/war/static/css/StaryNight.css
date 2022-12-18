@@ -24,6 +24,7 @@
     --text-dark-color: hsl(210, 2%, 23%);
     --danger-bg-color: hsl(356, 100%, 50%);
     --danger-hover-color: hsl(356, 100%, 65%);
+    --box-height: calc(100vh - 105px);
 }
 
 /* Pretty background with particlejs
@@ -223,11 +224,69 @@
  * Styling for "Ya.css"
  */
 
+html {
+  overflow: hidden !important;  
+}
+
 body.starynight {
   background-color: var(--bg-color) !important;
   font-family: Roboto, Helvetica, Arial, sans-serif;
   /* TODO(opensource): Change to commented version below once we're ready */
   background: none;
+}
+
+.starynight .ode-MainPanel {
+    height: 100vh;
+    width: 99%;
+}
+
+.starynight .ode-DeckPanel {
+    height: calc(100vh - 44px); /*This should be the full height - topPanel(44px)*/
+    width: 100%;
+}
+
+.starynight .ode-ProjectTab {
+    height: 100%;
+    width: 100%;
+    overflow: scroll;
+}
+
+.starynight .ode-PaletteBox {
+    height: var(--box-height);
+    width: 240px;
+}
+
+.starynight .ode-PropertiesBox {
+    height: var(--box-height);
+    width: 222px;
+}
+
+.starynight .ode-StructureAndAssetsBox {
+    height: var(--box-height);
+}
+
+.starynight .ode-SourceStructureBox {
+    height: calc(.69 * var(--box-height));
+}
+
+.starynight .ode-SourceStructureBox.ode-Box-body {
+    overflow: hidden !important;
+}
+
+.starynight .ode-AssetListBox {
+    height: calc(.3 * var(--box-height));
+}
+
+.starynight .ode-BlockSelectorBox {
+    height: calc(.69 * var(--box-height));
+}
+
+.starynight .ode-ViewerBox {
+    height: var(--box-height);
+}
+
+.starynight .ode-Box-buttons {
+    margin: auto auto 0 auto;
 }
 
 .starynight .blocklySvg {
@@ -285,10 +344,13 @@ body.starynight {
   margin: 4px;
   box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.065);
   filter: drop-shadow(4px 4px 5px black);
+  height: 100%;
+  display: flex;
+  flex-flow: column;
 }
 
 .starynight .ode-Box-header {
-  background: var(--title-color);/*rgba(56, 54, 57, 1);*/
+  background: var(--title-color);
   height: 31px;
   border: 1px solid;
   border-color: var(--light-bg-color) var(--light-bg-color) var(--light-bg-color) var(--light-bg-color);
@@ -296,6 +358,7 @@ body.starynight {
 
 .starynight .ode-Box-header-caption {
   color: var(--text-color);
+  height: 24px;
 }
 
 /*

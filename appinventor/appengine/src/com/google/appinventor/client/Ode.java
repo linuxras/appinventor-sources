@@ -587,6 +587,7 @@ public class Ode implements EntryPoint {
       // the project. This will cause the projects source files to be fetched
       // asynchronously, and loaded into file editors.
       ViewerBox.getViewerBox().show(projectRootNode);
+      ViewerBox.getViewerBox().scrollToTop();
       // Note: we can't call switchToDesignView until the Screen1 file editor
       // finishes loading. We leave that to setCurrentFileEditor(), which
       // will get called at the appropriate time.
@@ -903,6 +904,7 @@ public class Ode implements EntryPoint {
     statusPanel = new StatusPanel();
 
     DockPanel mainPanel = new DockPanel();
+    mainPanel.setStyleName("ode-MainPanel");
     mainPanel.add(topPanel, DockPanel.NORTH);
 
     // Create the Tutorial Panel
@@ -958,6 +960,7 @@ public class Ode implements EntryPoint {
     projectListPanel.add(ProjectListBox.getProjectListBox());
     projectToolbar = new ProjectToolbar();
     pVertPanel.add(projectToolbar);
+    pVertPanel.setCellHeight(projectToolbar, "30px");
     pVertPanel.add(projectListPanel);
     projectsTabIndex = deckPanel.getWidgetCount();
     deckPanel.add(pVertPanel);
@@ -1003,6 +1006,7 @@ public class Ode implements EntryPoint {
     workColumns.setCellHeight(viewerbox, "97%");
 
     structureAndAssets = new VerticalPanel();
+    structureAndAssets.setStyleName("ode-StructureAndAssetsBox");
     structureAndAssets.setVerticalAlignment(VerticalPanel.ALIGN_TOP);
     // Only one of the SourceStructureBox and the BlockSelectorBox is visible
     // at any given time, according to whether we are showing the form editor
@@ -1100,8 +1104,9 @@ public class Ode implements EntryPoint {
 //    mainPanel.add(switchToBlocksButton, DockPanel.EAST);
 
     //Commenting out for now to gain more space for the blocks editor
-    mainPanel.add(statusPanel, DockPanel.SOUTH);
-    mainPanel.setSize("100%", "100%");
+    //mainPanel.add(statusPanel, DockPanel.SOUTH);
+    //Give the mainPanel a css class so we can handle heights in css
+    //mainPanel.setSize("100%", "100%");
     RootPanel.get().add(mainPanel);
 
     // Add a handler to the RootPanel to keep track of Google Chrome Pinch Zooming and
