@@ -231,66 +231,11 @@ html {
 body.starynight {
   background-color: var(--bg-color) !important;
   font-family: Roboto, Helvetica, Arial, sans-serif;
-  /* TODO(opensource): Change to commented version below once we're ready */
   background: none;
 }
 
 .starynight .ode-Logo {
     margin: 2px 0px 2px 35px;
-}
-
-.starynight .ode-MainPanel {
-    height: 100vh;
-    width: 99%;
-}
-
-.starynight .ode-DeckPanel {
-    height: calc(100vh - 44px); /*This should be the full height - topPanel(44px)*/
-    width: 100%;
-}
-
-.starynight .ode-ProjectTab {
-    height: 100%;
-    width: 100%;
-    overflow: scroll;
-}
-
-.starynight .ode-PaletteBox {
-    height: var(--box-height);
-    width: 240px;
-}
-
-.starynight .ode-PropertiesBox {
-    height: var(--box-height);
-    width: 222px;
-}
-
-.starynight .ode-StructureAndAssetsBox {
-    height: var(--box-height);
-}
-
-.starynight .ode-SourceStructureBox {
-    height: calc(.69 * var(--box-height));
-}
-
-.starynight .ode-SourceStructureBox.ode-Box-body {
-    overflow: hidden !important;
-}
-
-.starynight .ode-AssetListBox {
-    height: calc(.3 * var(--box-height));
-}
-
-.starynight .ode-BlockSelectorBox {
-    height: calc(.69 * var(--box-height));
-}
-
-.starynight .ode-ViewerBox {
-    height: var(--box-height);
-}
-
-.starynight .ode-Box-buttons {
-    margin: auto auto 0 auto;
 }
 
 .starynight .blocklySvg {

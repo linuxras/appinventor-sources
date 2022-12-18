@@ -43,6 +43,7 @@ public final class ProjectListBox extends Box {
 
     plist = new ProjectList();
     setContent(plist);
+    setStyleName("ode-ProjectListBox");
   }
 
   /**

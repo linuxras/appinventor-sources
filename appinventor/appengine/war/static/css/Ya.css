@@ -194,6 +194,10 @@ body {
     width: 100%;
 }
 
+.ode-ProjectListBox {
+    height: var(--box-height);
+}
+
 .ode-ProjectTab {
     height: 100%;
     width: 100%;
