@@ -68,6 +68,11 @@ public final class ProjectListBox extends Box {
         super.onTrashProjectRestored(proj);
         checkUpdateHeight();
       }
+      @Override
+      public void onProjectTrashed(Project proj) {
+        super.onProjectTrashed(proj);
+        checkUpdateHeight();
+      }
     };
     //Monitor window resizing the size this panel
     Window.addResizeHandler(new ResizeHandler() {
