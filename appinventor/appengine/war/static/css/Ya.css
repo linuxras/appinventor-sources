@@ -36,7 +36,7 @@ they get cut off in Windows.
 
 body, html {
   height: 100vh;
-  overflow: hidden !important;  
+  overflow-y: hidden !important;  
 }
 
 body {
@@ -194,7 +194,7 @@ body {
     width: 100%;
 }
 
-.ode-ProjectListBox {
+.ode-ProjectListBox-overflow {
     height: var(--box-height);
 }
 

@@ -461,6 +461,15 @@ public abstract class Box extends HandlerPanel {
   }
 
   /**
+   * Returns the body panel
+   * 
+   * @return body panel widget
+   */
+  protected Widget getBody() {
+    return body;
+  }
+  
+  /**
    * Invoked upon resizing of the box by the layout. Box height will remain
    * unmodified.
    *
