@@ -1050,10 +1050,12 @@ public class Ode implements EntryPoint {
         }
       });
 
+      int docHeight = Document.get().getScrollHeight(); //30 is for dismissButton
+      int maxPageHeight = (docHeight - (105 + 30));
       ColumnLayout defaultLayout = new ColumnLayout("Default");
       Column column = defaultLayout.addColumn(100);
-      column.add(MessagesOutputBox.class, 300, false);
-      column.add(OdeLogBox.class, 300, false);
+      column.add(MessagesOutputBox.class, maxPageHeight/2, false);
+      column.add(OdeLogBox.class, maxPageHeight/2, false);
       final WorkAreaPanel debuggingTab = new WorkAreaPanel(new OdeBoxRegistry(), defaultLayout);
 
       debuggingTab.add(dismissButton);

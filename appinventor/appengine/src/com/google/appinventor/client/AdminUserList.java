@@ -9,10 +9,11 @@ import com.google.appinventor.client.admin.AdminComparators;
 import com.google.appinventor.client.output.OdeLog;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -106,17 +107,17 @@ public class AdminUserList extends Composite {
     searchPanel.add(searchText);
     searchPanel.add(searchButton);
     Button addUserButton = new Button("Add User");
-    addUserButton.addClickListener(new ClickListener() {
+    addUserButton.addClickHandler(new ClickHandler() {
         @Override
-        public void onClick(Widget sender) {
+        public void onClick(ClickEvent sender) {
           addUpdateUserDialog(null);
         }
       });
     searchPanel.add(addUserButton);
 
-    searchButton.addClickListener(new ClickListener() {
+    searchButton.addClickHandler(new ClickHandler() {
         @Override
-        public void onClick(Widget sender) {
+        public void onClick(ClickEvent sender) {
           Ode.getInstance().getAdminInfoService().searchUsers(searchText.getText(), searchCallback);
         }
       });
@@ -127,9 +128,9 @@ public class AdminUserList extends Composite {
     panel.add(searchPanel);
     panel.add(table);
     Button dismissButton = new Button("Dismiss");
-    dismissButton.addClickListener(new ClickListener() {
+    dismissButton.addClickHandler(new ClickHandler() {
         @Override
-        public void onClick(Widget sender) {
+        public void onClick(ClickEvent sender) {
           Ode.getInstance().switchToDesignView();
         }
       });
@@ -334,10 +335,10 @@ public class AdminUserList extends Composite {
     HorizontalPanel buttonPanel = new HorizontalPanel();
     Button okButton = new Button("OK");
     buttonPanel.add(okButton);
-    hidePasswordCheckbox.addClickListener(new ClickListener() {
+    hidePasswordCheckbox.addClickHandler(new ClickHandler() {
         @Override
-        public void onClick(Widget sender) {
-          if (hidePasswordCheckbox.isChecked()) { // We just asked to mask passwords
+        public void onClick(ClickEvent event) {
+          if (hidePasswordCheckbox.getValue()) { // We just asked to mask passwords
             userInfo.setWidget(1, 0, passwordLabel);
             userInfo.setWidget(1, 1, passwordBox1);
             userInfo.setWidget(2, 0, passwordLabel2);
@@ -349,64 +350,64 @@ public class AdminUserList extends Composite {
           }
         }
       });
-    okButton.addClickListener(new ClickListener() {
-        @Override
-        public void onClick(Widget sender) {
-          String password = passwordBox.getText();
-          if (hidePasswordCheckbox.isChecked()) {
-            password = passwordBox1.getText();
-            String checkPassword = passwordBox2.getText();
-            if (!checkPassword.equals(password)) {
-              message.setHTML("<font color=red>Passwords do not match.</font>");
-              return;
-            }
-          }
-          String email = userName.getText();
-          if (email.equals("")) {
-            message.setHTML("<font color=red>You Must Supply a user name (email address)</font>");
+    okButton.addClickHandler(new ClickHandler() {
+      @Override
+      public void onClick(ClickEvent event) {
+        String password = passwordBox.getText();
+        if (hidePasswordCheckbox.getValue()) {
+          password = passwordBox1.getText();
+          String checkPassword = passwordBox2.getText();
+          if (!checkPassword.equals(password)) {
+            message.setHTML("<font color=red>Passwords do not match.</font>");
             return;
-          } else {
-            // Work!!
-            AdminUser nuser = user;
-            if (nuser == null) {
-              nuser = new AdminUser(null, email, email, false, isAdminBox.isChecked(), null);
-            } else {
-              nuser.setIsAdmin(isAdminBox.isChecked());
-              nuser.setEmail(email);
-            }
-            nuser.setPassword(password);
-            Ode.getInstance().getAdminInfoService().storeUser(nuser,
-              new OdeAsyncCallback<Void> ("Oops") {
-                @Override
-                public void onSuccess(Void v) {
-                  dialogBox.hide();
-                }
-                @Override
-                public void onFailure(Throwable error) {
-                  OdeLog.xlog(error);
-                  if (error instanceof AdminInterfaceException) {
-                    ErrorReporter.reportError(error.getMessage());
-                  } else {
-                    super.onFailure(error);
-                  }
-                  dialogBox.hide();
-                }
-              });
           }
         }
-      });
+        String email = userName.getText();
+        if (email.equals("")) {
+          message.setHTML("<font color=red>You Must Supply a user name (email address)</font>");
+          return;
+        } else {
+          // Work!!
+          AdminUser nuser = user;
+          if (nuser == null) {
+            nuser = new AdminUser(null, email, email, false, isAdminBox.isChecked(), null);
+          } else {
+            nuser.setIsAdmin(isAdminBox.getValue());
+            nuser.setEmail(email);
+          }
+          nuser.setPassword(password);
+          Ode.getInstance().getAdminInfoService().storeUser(nuser,
+            new OdeAsyncCallback<Void> ("Oops") {
+              @Override
+              public void onSuccess(Void v) {
+                dialogBox.hide();
+              }
+              @Override
+              public void onFailure(Throwable error) {
+                OdeLog.xlog(error);
+                if (error instanceof AdminInterfaceException) {
+                  ErrorReporter.reportError(error.getMessage());
+                } else {
+                  super.onFailure(error);
+                }
+                dialogBox.hide();
+              }
+            });
+        }
+      }
+    });
     Button cancelButton = new Button("Cancel");
     buttonPanel.add(cancelButton);
-    cancelButton.addClickListener(new ClickListener() {
+    cancelButton.addClickHandler(new ClickHandler() {
         @Override
-        public void onClick(Widget sender) {
+        public void onClick(ClickEvent event) {
           dialogBox.hide();
         }
       });
     vPanel.add(buttonPanel);
     dialogBox.setWidget(vPanel);
     if (!adding) {
-      isAdminBox.setChecked(user.getIsAdmin());
+      isAdminBox.setValue(user.getIsAdmin());
       userName.setText(user.getEmail());
     }
     // switchUserPanel -- Put up a button to permit us to
@@ -414,9 +415,9 @@ public class AdminUserList extends Composite {
     if (!adding) {
       HorizontalPanel switchUserPanel = new HorizontalPanel();
       Button switchButton = new Button("Switch to This User");
-      switchButton.addClickListener(new ClickListener() {
+      switchButton.addClickHandler(new ClickHandler() {
           @Override
-          public void onClick(Widget sender) {
+          public void onClick(ClickEvent sender) {
             Ode.getInstance().setReadOnly();  // Must make sure we are read only.
                                               // When we call reloadWindow (below) the onClosing
                                               // handler in Ode will be called. It will attempt
@@ -438,5 +439,6 @@ public class AdminUserList extends Composite {
     dialogBox.center();
     dialogBox.show();
   }
+  
 }
 

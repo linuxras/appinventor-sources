@@ -42,6 +42,7 @@ public final class AdminUserListBox extends Box {
 
     plist = new AdminUserList();
     setContent(plist);
+    setStylePrimaryName("ode-AdminUserListBox");
   }
 
   /**

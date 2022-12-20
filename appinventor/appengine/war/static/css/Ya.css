@@ -198,6 +198,10 @@ body {
     height: var(--box-height);
 }
 
+.ode-AdminUserListBox {
+    height: var(--box-height);
+}
+
 .ode-ProjectTab {
     height: 100%;
     width: 100%;
