@@ -730,11 +730,13 @@ public final class YaFormEditor extends SimpleEditor implements FormChangeListen
     // Set the palette box's content.
     PaletteBox paletteBox = PaletteBox.getPaletteBox();
     paletteBox.setContent(palettePanel);
+    paletteBox.scrollToTop();
 
     // Update the source structure explorer with the tree of this form's components.
     sourceStructureExplorer.updateTree(form.buildComponentsTree(),
         selectedComponent.getSourceStructureExplorerItem());
     SourceStructureBox.getSourceStructureBox().setVisible(true);
+    SourceStructureBox.getSourceStructureBox().scrollToTop();
 
     // Show the assets box.
     AssetListBox assetListBox = AssetListBox.getAssetListBox();
@@ -745,6 +747,7 @@ public final class YaFormEditor extends SimpleEditor implements FormChangeListen
     propertiesBox.setContent(designProperties);
     updatePropertiesPanel(form.getSelectedComponents(), true);
     propertiesBox.setVisible(true);
+    propertiesBox.scrollToTop();
   }
 
   /*
@@ -816,6 +819,7 @@ public final class YaFormEditor extends SimpleEditor implements FormChangeListen
       selectedProperties.addPropertyChangeListener(this);
     }
     designProperties.setProperties(selectedProperties);
+    PropertiesBox.getPropertiesBox().scrollToTop();
     if (components.size() > 1) {
       designProperties.setPropertiesCaption(components.size() + " components selected");
     } else {

@@ -94,24 +94,30 @@ public class DropDownButton extends TextButton {
       // above instead
 
       if(dropDownBottom > screenBottom) {
-          int newTop = Window.Navigator.getUserAgent().contains("Chrome") && isPinchZoomed()
+        int newTop = Window.Navigator.getUserAgent().contains("Chrome") && isPinchZoomed()
             ? getTrueAbsoluteTop() -offsetHeight
             : getAbsoluteTop() - offsetHeight;
 
-          // account for the extreeeemely unlikely case where newTop
-          // also goes off the screen in this case, it makes more
-          // sense to just go off the bottom of the screen (the screen
-          // won't grow up, and so the menu would get completely cut
-          // off at the top
+        // account for the extreeeemely unlikely case where newTop
+        // also goes off the screen in this case, it makes more
+        // sense to just go off the bottom of the screen (the screen
+        // won't grow up, and so the menu would get completely cut
+        // off at the top
+        //NOPE: we don't scroll the screen anymore so just set it to 0 otherwise :)
 
-          if(newTop >= 0) {
-              top = newTop;
-          }
+        if(newTop >= 0) {
+          top = newTop;
+        } else {
+          //Just bump it up a bit then
+          int diff = (dropDownBottom - screenBottom) + 4;
+          top = top - diff;
+        }
       }
 
       menu.setPopupPosition(left, top);
 
     }
+
   }
 
   // Create a new drop-down menu button (with text), initially populated with items. Null

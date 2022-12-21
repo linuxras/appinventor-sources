@@ -128,8 +128,10 @@ public final class BlockSelectorBox extends Box {
     sourceStructureExplorer = new SourceStructureExplorer();
 
     setContent(sourceStructureExplorer);
+    setButtons(sourceStructureExplorer.getButtons());
     setVisible(false);
     drawerListeners = new ArrayList<BlockDrawerSelectionListener>();
+    setStyleName("ode-BlockSelectorBox");
   }
 
   private static void initBundledImages() {

@@ -27,6 +27,7 @@ import com.google.gwt.event.dom.client.MouseMoveHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
@@ -46,6 +47,7 @@ public class AssetList extends Composite implements ProjectChangeListener {
   // The asset "list" is represented as a tree and follows the same GWT conventions.
   private Tree assetList;
   private final VerticalPanel panel;
+  private final SimplePanel buttonPanel;
 
   private long projectId;
   private Project project;
@@ -77,12 +79,12 @@ public class AssetList extends Composite implements ProjectChangeListener {
       }
     });
 
-    SimplePanel buttonPanel = new SimplePanel();
+    buttonPanel = new SimplePanel();
     buttonPanel.setStyleName("ode-PanelButtons");
     buttonPanel.add(addButton);
 
-    panel.add(buttonPanel);
-    panel.setCellHorizontalAlignment(buttonPanel, VerticalPanel.ALIGN_CENTER);
+    //panel.add(buttonPanel);
+    //panel.setCellHorizontalAlignment(buttonPanel, VerticalPanel.ALIGN_CENTER);
 
     initWidget(panel);
 
@@ -160,6 +162,10 @@ public class AssetList extends Composite implements ProjectChangeListener {
     }
 
     refreshAssetList();
+  }
+  
+  public Widget getButtons() {
+    return buttonPanel;
   }
 
   // ProjectChangeListener implementation

@@ -42,6 +42,8 @@ public final class SourceStructureBox extends Box {
     sourceStructureExplorer = new SourceStructureExplorer();
 
     setContent(sourceStructureExplorer);
+    setButtons(sourceStructureExplorer.getButtons());
+    setStyleName("ode-SourceStructureBox");
   }
 
   /**

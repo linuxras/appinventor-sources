@@ -265,7 +265,7 @@ public final class ColumnLayout extends Layout {
 
     // Horizontal panel to hold columns
     HorizontalPanel horizontalPanel = new HorizontalPanel();
-    horizontalPanel.setSize("100%", "100%");
+    horizontalPanel.setSize("100%", "90%");
     workArea.add(horizontalPanel);
 
     // Initialize columns

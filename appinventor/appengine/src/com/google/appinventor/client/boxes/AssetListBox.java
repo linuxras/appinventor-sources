@@ -41,6 +41,8 @@ public final class AssetListBox extends Box {
 
     alist = new AssetList();
     setContent(alist);
+    setButtons(alist.getButtons());
+    setStyleName("ode-AssetListBox");
   }
 
   /**
