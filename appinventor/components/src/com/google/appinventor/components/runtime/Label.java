@@ -12,11 +12,15 @@ import com.google.appinventor.components.annotations.IsColor;
 import com.google.appinventor.components.annotations.PropertyCategory;
 import com.google.appinventor.components.annotations.SimpleObject;
 import com.google.appinventor.components.annotations.SimpleProperty;
+import com.google.appinventor.components.annotations.SimpleEvent;
+import com.google.appinventor.components.annotations.SimpleFunction;
 import com.google.appinventor.components.common.ComponentCategory;
 import com.google.appinventor.components.common.PropertyTypeConstants;
 import com.google.appinventor.components.common.YaVersion;
 import com.google.appinventor.components.runtime.util.TextViewUtil;
 
+import android.app.Activity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -37,7 +41,8 @@ import android.widget.TextView;
     "the appearance and placement of the text.",
     category = ComponentCategory.USERINTERFACE)
 @SimpleObject
-public final class Label extends AndroidViewComponent implements AccessibleComponent{
+public final class Label extends AndroidViewComponent implements AccessibleComponent, 
+  View.OnClickListener, View.OnLongClickListener {
 
   // default margin around a label in DPs
   // note that the spacing between adjacent labels will be twice this value
@@ -51,6 +56,10 @@ public final class Label extends AndroidViewComponent implements AccessibleCompo
   private final TextView view;
 
   private final LinearLayout.LayoutParams linearLayoutParams;
+  
+  private final ComponentContainer container;
+  
+  private final Activity activity;
 
   // Backing for text alignment
   private int textAlignment;
@@ -81,6 +90,14 @@ public final class Label extends AndroidViewComponent implements AccessibleCompo
 
   //Whether or not the text should be big
   private boolean isBigText = false;
+  
+  private boolean clickable;
+  
+  // Marquee flag for label
+  private boolean hasMarquee;
+  
+  // Marquee repeat limit, -1 is infinate
+  private int marqueeRepeatLimit;
 
   /**
    * Creates a new Label component.
@@ -90,9 +107,14 @@ public final class Label extends AndroidViewComponent implements AccessibleCompo
   public Label(ComponentContainer container) {
     super(container);
     view = new TextView(container.$context());
+    this.container = container;
+    this.activity = container.$context();
 
     // Adds the component to its designated container
     container.$add(this);
+    
+    view.setOnClickListener(this);
+    view.setOnLongClickListener(this);
 
     // Get the layout parameters to use in setting margins (and potentially
     // other things.
@@ -121,6 +143,9 @@ public final class Label extends AndroidViewComponent implements AccessibleCompo
     TextColor(Component.COLOR_DEFAULT);
     HTMLFormat(false);
     HasMargins(true);
+    Clickable(false);
+    Marquee(false);
+    MarqueeRepeatLimit(-1);
   }
 
   // put this in the right file
@@ -464,6 +489,95 @@ private void setLabelMargins(boolean hasMargins) {
     } else {
       TextViewUtil.setTextColor(view, container.$form().isDarkTheme() ? Component.COLOR_WHITE : Component.COLOR_BLACK);
     }
+  }
+  
+  @SimpleProperty(category = PropertyCategory.BEHAVIOR)
+  public boolean Clickable() {
+    return clickable;
+  }
+  
+  @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_BOOLEAN,
+      defaultValue = "False")
+  @SimpleProperty
+  public void Clickable(boolean canClick) {
+    clickable = canClick;
+    view.setClickable(clickable);
+    view.setLongClickable(clickable);
+  }
+  
+  @SimpleProperty(
+      category = PropertyCategory.APPEARANCE)
+  public boolean Marquee() {
+    return hasMarquee;
+  }
+  
+  @DesignerProperty( editorType = PropertyTypeConstants.PROPERTY_TYPE_BOOLEAN,
+      defaultValue = "False")
+  @SimpleProperty
+  public void Marquee(boolean marquee) {
+    hasMarquee = marquee;
+    if(hasMarquee) {
+      //Set the view the single line
+      view.setSingleLine(true);
+      view.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+      view.setSelected(true);
+    } else {
+      view.setSingleLine(false);
+      view.setEllipsize(null);
+    }
+  }
+  
+  @SimpleProperty(
+      category = PropertyCategory.APPEARANCE)
+  public int MarqueeRepeatLimit() {
+    return marqueeRepeatLimit;
+  }
+  
+  @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_INTEGER,
+      defaultValue = "-1")
+  @SimpleProperty
+  public void MarqueeRepeatLimit(int limit) {
+    marqueeRepeatLimit = limit;
+    view.setMarqueeRepeatLimit(limit);
+  }
+  
+  @SimpleFunction(description = "Add a blurred shadow of text below text")
+  public void SetShadow(float x, float y, float radius, @IsColor int color) {
+    TextViewUtil.setShadowLayer(view, radius, x, y, color);
+  }
+  
+  @SimpleFunction(description = "Allows you to set animation style. Valid (case-insensitive) values are: "
+      + "FadeIn, FadeOut, Flip, Bounce, Blink, ZoomIn, ZoomOut, Rotate, Move, "
+      + "SlideDown, SlideUp. If invalid style is used, animation will be removed.")
+  public void StartAnimation(String style) {
+    if(!TextViewUtil.setAnimation(view, activity, style)) {
+      StopAnimation();
+    }
+  }
+  
+  @SimpleFunction(description = "Stop currently running animations if any")
+  public void StopAnimation() {
+    TextViewUtil.stopAnimation(view);
+  }
+  
+  @SimpleEvent(description = "Triggered when label has been clicked on if Clickable is set")
+  public void Click() {
+    EventDispatcher.dispatchEvent(this, "Click");
+  }
+  
+  @SimpleEvent(description = "Triggered when label has been long clicked on if Clickable is set")
+  public boolean LongClick() {
+    return EventDispatcher.dispatchEvent(this, "LongClick");
+  }
+  
+  @Override
+  public void onClick(View v) {
+    Click();
+  }
+  
+  @Override
+  public boolean onLongClick(View v) {
+    return LongClick();
   }
 
   @Override

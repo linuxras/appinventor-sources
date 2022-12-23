@@ -115,5 +115,139 @@ public class AnimationXmlConstants {
       "\t<alpha android:fromAlpha=\"1.0\" android:toAlpha=\"0\"\n" +
       "\t\t\tandroid:duration=\"@android:integer/config_mediumAnimTime\"/>\n" +
       "</set>";
+  
+  // Animations for using with Label StartAnimation function
+  public final static String FADE_IN = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n\n"
+      + "<set xmlns:android=\"http://schemas.android.com/apk/res/android\"\n"
+      + "\tandroid:fillAfter=\"true\" >\n"
+      + "\t<alpha\n"
+      + "\t\tandroid:duration=\"1000\"\n"
+      + "\t\tandroid:fromAlpha=\"0.0\"\n"
+      + "\t\tandroid:interpolator=\"@android:anim/accelerate_interpolator\"\n"
+      + "\t\tandroid:toAlpha=\"1.0\" />\n"
+      + "</set>";
+  
+  public final static String FADE_OUT = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+      + "<set xmlns:android=\"http://schemas.android.com/apk/res/android\"\n"
+      + "\tandroid:fillAfter=\"true\" >\n"
+      + "\t<alpha\n"
+      + "\t\tandroid:duration=\"1000\"\n"
+      + "\t\tandroid:fromAlpha=\"1.0\"\n"
+      + "\t\tandroid:interpolator=\"@android:anim/accelerate_interpolator\"\n"
+      + "\t\tandroid:toAlpha=\"0.0\" />\n"
+      + "</set>";
+  
+  public final static String BLINK = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+      + "<set xmlns:android=\"http://schemas.android.com/apk/res/android\">\n"
+      + "\t<alpha android:fromAlpha=\"0.0\"\n"
+      + "\t\tandroid:toAlpha=\"1.0\"\n"
+      + "\t\tandroid:interpolator=\"@android:anim/accelerate_interpolator\"\n"
+      + "\t\tandroid:duration=\"600\"\n"
+      + "\t\tandroid:repeatMode=\"reverse\"\n"
+      + "\t\tandroid:repeatCount=\"infinite\"/>\n"
+      + "</set>";
+  
+  public final static String ZOOM_IN = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+      + "<set xmlns:android=\"http://schemas.android.com/apk/res/android\"\n"
+      + "\tandroid:fillAfter=\"true\" >\n"
+      + "\t<scale\n"
+      + "\t\txmlns:android=\"http://schemas.android.com/apk/res/android\"\n"
+      + "\t\tandroid:duration=\"1000\"\n"
+      + "\t\tandroid:fromXScale=\"1\"\n"
+      + "\t\tandroid:fromYScale=\"1\"\n"
+      + "\t\tandroid:pivotX=\"50%\"\n"
+      + "\t\tandroid:pivotY=\"50%\"\n"
+      + "\t\tandroid:toXScale=\"3\"\n"
+      + "\t\tandroid:toYScale=\"3\" >\n"
+      + "\t</scale>\n"
+      + "</set>";
+  
+  public final static String ZOOM_OUT = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+      + "<set xmlns:android=\"http://schemas.android.com/apk/res/android\"\n"
+      + "\tandroid:fillAfter=\"true\" >\n"
+      + "\t<scale\n"
+      + "\t\txmlns:android=\"http://schemas.android.com/apk/res/android\"\n"
+      + "\t\tandroid:duration=\"1000\"\n"
+      + "\t\tandroid:fromXScale=\"1.0\"\n"
+      + "\t\tandroid:fromYScale=\"1.0\"\n"
+      + "\t\tandroid:pivotX=\"50%\"\n"
+      + "\t\tandroid:pivotY=\"50%\"\n"
+      + "\t\tandroid:toXScale=\"0.5\"\n"
+      + "\t\tandroid:toYScale=\"0.5\" >\n"
+      + "\t</scale>\n"
+      + "</set>";
+  
+  public final static String ROTATE = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+      + "<set xmlns:android=\"http://schemas.android.com/apk/res/android\">\n"
+      + "\t<rotate android:fromDegrees=\"0\"\n"
+      + "\t\tandroid:toDegrees=\"360\"\n"
+      + "\t\tandroid:pivotX=\"50%\"\n"
+      + "\t\tandroid:pivotY=\"50%\"\n"
+      + "\t\tandroid:duration=\"600\"\n"
+      + "\t\tandroid:repeatMode=\"restart\"\n"
+      + "\t\tandroid:repeatCount=\"infinite\"\n"
+      + "\t\tandroid:interpolator=\"@android:anim/cycle_interpolator\"/>\n"
+      + "</set>";
+  
+  public final static String MOVE = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+      + "<set xmlns:android=\"http://schemas.android.com/apk/res/android\"\n"
+      + "\tandroid:interpolator=\"@android:anim/linear_interpolator\"\n"
+      + "\tandroid:fillAfter=\"true\">\n"
+      + "\t<translate\n"
+      + "\t\tandroid:fromXDelta=\"0%p\"\n"
+      + "\t\tandroid:toXDelta=\"75%p\"\n"
+      + "\t\tandroid:duration=\"800\" />\n"
+      + "</set>";
+  
+  public final static String SLIDE_UP = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+      + "<set xmlns:android=\"http://schemas.android.com/apk/res/android\"\n"
+      + "\tandroid:fillAfter=\"true\" >\n"
+      + "\t<scale\n"
+      + "\t\tandroid:duration=\"500\"\n"
+      + "\t\tandroid:fromXScale=\"1.0\"\n"
+      + "\t\tandroid:fromYScale=\"1.0\"\n"
+      + "\t\tandroid:interpolator=\"@android:anim/linear_interpolator\"\n"
+      + "\t\tandroid:toXScale=\"1.0\"\n"
+      + "\t\tandroid:toYScale=\"0.0\" />\n"
+      + "</set>";
+  
+  public final static String SLIDE_DOWN = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+      + "<set xmlns:android=\"http://schemas.android.com/apk/res/android\"\n"
+      + "\tandroid:fillAfter=\"true\">\n"
+      + "\t<scale\n"
+      + "\t\tandroid:duration=\"500\"\n"
+      + "\t\tandroid:fromXScale=\"1.0\"\n"
+      + "\t\tandroid:fromYScale=\"0.0\"\n"
+      + "\t\tandroid:toXScale=\"1.0\"\n"
+      + "\t\tandroid:toYScale=\"1.0\" />\n"
+      + "</set>";
+  
+  public final static String BOUNCE = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+      + "<set xmlns:android=\"http://schemas.android.com/apk/res/android\"\n"
+      + "\tandroid:fillAfter=\"true\"\n"
+      + "\tandroid:interpolator=\"@android:anim/bounce_interpolator\">\n"
+      + "\t<scale\n"
+      + "\t\tandroid:duration=\"500\"\n"
+      + "\t\tandroid:fromXScale=\"1.0\"\n"
+      + "\t\tandroid:fromYScale=\"0.0\"\n"
+      + "\t\tandroid:toXScale=\"1.0\"\n"
+      + "\t\tandroid:toYScale=\"1.0\" />\n"
+      + "</set>";
+  
+  public final static String FLIP = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+      + "<set xmlns:android=\"http://schemas.android.com/apk/res/android\">\n"
+      + "\t<rotate android:fromDegrees=\"0\"\n"
+      + "\t\tandroid:toDegrees=\"180\"\n"
+      + "\t\tandroid:pivotX=\"50%\"\n"
+      + "\t\tandroid:pivotY=\"50%\"\n"
+      + "\t\tandroid:duration=\"600\"\n"
+      + "\t\tandroid:interpolator=\"@android:anim/cycle_interpolator\"/>\n"
+      + "\t<rotate android:fromDegrees=\"180\"\n"
+      + "\t\tandroid:toDegrees=\"0\"\n"
+      + "\t\tandroid:pivotX=\"50%\"\n"
+      + "\t\tandroid:pivotY=\"50%\"\n"
+      + "\t\tandroid:duration=\"600\"\n"
+      + "\t\tandroid:interpolator=\"@android:anim/cycle_interpolator\"/>\n"
+      + "</set>";
 
 }

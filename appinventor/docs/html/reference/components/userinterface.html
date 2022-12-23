@@ -467,6 +467,8 @@ Valid values for the month field are 1-12 and 1-31 for the day field.</dd>
   <dt id="Label.BackgroundColor" class="color"><em>BackgroundColor</em></dt>
   <dd>Specifies the label’s background color as an alpha-red-green-blue
  integer.</dd>
+  <dt id="Label.Clickable" class="boolean"><em>Clickable</em></dt>
+  <dd>Property for Clickable</dd>
   <dt id="Label.FontBold" class="boolean do"><em>FontBold</em></dt>
   <dd>Specifies whether the label’s text should be bold.
  Some fonts do not support bold.</dd>
@@ -493,6 +495,10 @@ Valid values for the month field are 1-12 and 1-31 for the day field.</dd>
   <dt id="Label.HeightPercent" class="number wo bo"><em>HeightPercent</em></dt>
   <dd>Specifies the <code class="highlighter-rouge">Label</code>’s vertical height as a percentage
  of the <a href="userinterface.html#Screen.Height"><code class="highlighter-rouge">Screen</code>’s <code class="highlighter-rouge">Height</code></a>.</dd>
+  <dt id="Label.Marquee" class="boolean"><em>Marquee</em></dt>
+  <dd>Property for Marquee</dd>
+  <dt id="Label.MarqueeRepeatLimit" class="number"><em>MarqueeRepeatLimit</em></dt>
+  <dd>Property for MarqueeRepeatLimit</dd>
   <dt id="Label.Text" class="text"><em>Text</em></dt>
   <dd>Specifies the text displayed by the label.</dd>
   <dt id="Label.TextAlignment" class="number do"><em>TextAlignment</em></dt>
@@ -514,11 +520,23 @@ Valid values for the month field are 1-12 and 1-31 for the day field.</dd>
 
 <h3 id="Label-Events">Events</h3>
 
-<p class="events">None</p>
+<dl class="events">
+  <dt id="Label.Click">Click()</dt>
+  <dd>Triggered when label has been clicked on if Clickable is set</dd>
+  <dt id="Label.LongClick">LongClick()</dt>
+  <dd>Triggered when label has been long clicked on if Clickable is set</dd>
+</dl>
 
 <h3 id="Label-Methods">Methods</h3>
 
-<p class="methods">None</p>
+<dl class="methods">
+  <dt id="Label.SetShadow" class="method"><i></i> SetShadow(<em class="number">x</em>,<em class="number">y</em>,<em class="number">radius</em>,<em class="color">color</em>)</dt>
+  <dd>Add a blurred shadow of text below text</dd>
+  <dt id="Label.StartAnimation" class="method"><i></i> StartAnimation(<em class="text">style</em>)</dt>
+  <dd>Allows you to set animation style. Valid (case-insensitive) values are: FadeIn, FadeOut, Flip, Bounce, Blink, ZoomIn, ZoomOut, Rotate, Move, SlideDown, SlideUp. If invalid style is used, animation will be removed.</dd>
+  <dt id="Label.StopAnimation" class="method"><i></i> StopAnimation()</dt>
+  <dd>Stop currently running animations if any</dd>
+</dl>
 
 <h2 id="ListPicker">ListPicker</h2>
 
@@ -902,6 +920,10 @@ Valid values for the month field are 1-12 and 1-31 for the day field.</dd>
 <dl class="methods">
   <dt id="PasswordTextBox.RequestFocus" class="method"><i></i> RequestFocus()</dt>
   <dd>Request focus to current <code class="highlighter-rouge">PasswordTextBox</code>.</dd>
+  <dt id="PasswordTextBox.StartAnimation" class="method"><i></i> StartAnimation(<em class="text">style</em>)</dt>
+  <dd>Allows you to set animation style. Valid (case-insensitive) values are: FadeIn, FadeOut, Flip, Bounce, Blink, ZoomIn, ZoomOut, Rotate, Move, SlideDown, SlideUp. If invalid style is used, animation will be removed.</dd>
+  <dt id="PasswordTextBox.StopAnimation" class="method"><i></i> StopAnimation()</dt>
+  <dd>Stop currently running animations if any</dd>
 </dl>
 
 <h2 id="Screen">Screen</h2>
@@ -1384,6 +1406,12 @@ having dark grey components.</li>
  keyboard when the users presses the Done key.</dd>
   <dt id="TextBox.RequestFocus" class="method"><i></i> RequestFocus()</dt>
   <dd>Request focus to current <code class="highlighter-rouge">TextBox</code>.</dd>
+  <dt id="TextBox.SetShadow" class="method"><i></i> SetShadow(<em class="number">x</em>,<em class="number">y</em>,<em class="number">radius</em>,<em class="color">color</em>)</dt>
+  <dd>Add a blurred shadow of text below text</dd>
+  <dt id="TextBox.StartAnimation" class="method"><i></i> StartAnimation(<em class="text">style</em>)</dt>
+  <dd>Allows you to set animation style. Valid (case-insensitive) values are: FadeIn, FadeOut, Flip, Bounce, Blink, ZoomIn, ZoomOut, Rotate, Move, SlideDown, SlideUp. If invalid style is used, animation will be removed.</dd>
+  <dt id="TextBox.StopAnimation" class="method"><i></i> StopAnimation()</dt>
+  <dd>Stop currently running animations if any</dd>
 </dl>
 
 <h2 id="TimePicker">TimePicker</h2>

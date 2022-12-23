@@ -143,6 +143,18 @@ public final class MockLabel extends MockVisibleComponent implements FormChangeL
     }
     MockComponentsUtil.setWidgetTextColor(labelWidget, text);
   }
+  
+  private void setMarqueeProperty(String text) {
+    if(Boolean.parseBoolean(text)) {
+      labelWidget.addStyleName("ode-SimpleMockComponent-marquee");
+    } else {
+      labelWidget.removeStyleName("ode-SimpleMockComponent-marquee");
+    }
+  }
+  
+  private void setMarqueeRepeatLimit(String limit) {
+    //Just do nothing with this
+  }
 
   // PropertyChangeListener implementation
 
@@ -177,6 +189,10 @@ public final class MockLabel extends MockVisibleComponent implements FormChangeL
       // either as HTML or text as appropriate
       setTextProperty(savedText);
       refreshForm();
+    } else if (propertyName.equals(PROPERTY_NAME_MARQUEE)) {
+      setMarqueeProperty(newValue);
+    } else if (propertyName.equals(PROPERTY_NAME_MARQUEEREPEATLIMIT)) {
+      setMarqueeRepeatLimit(newValue);
     }
   }
 

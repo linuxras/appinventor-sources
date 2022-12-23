@@ -435,6 +435,9 @@ Labels are components used to show text.
 : Specifies the label's background color as an alpha-red-green-blue
  integer.
 
+{:id="Label.Clickable" .boolean} *Clickable*
+: Property for Clickable
+
 {:id="Label.FontBold" .boolean .do} *FontBold*
 : Specifies whether the label's text should be bold.
  Some fonts do not support bold.
@@ -470,6 +473,12 @@ Labels are components used to show text.
 : Specifies the `Label`'s vertical height as a percentage
  of the [`Screen`'s `Height`](userinterface.html#Screen.Height).
 
+{:id="Label.Marquee" .boolean} *Marquee*
+: Property for Marquee
+
+{:id="Label.MarqueeRepeatLimit" .number} *MarqueeRepeatLimit*
+: Property for MarqueeRepeatLimit
+
 {:id="Label.Text" .text} *Text*
 : Specifies the text displayed by the label.
 
@@ -496,14 +505,25 @@ Labels are components used to show text.
 ### Events  {#Label-Events}
 
 {:.events}
-None
 
+{:id="Label.Click"} Click()
+: Triggered when label has been clicked on if Clickable is set
+
+{:id="Label.LongClick"} LongClick()
+: Triggered when label has been long clicked on if Clickable is set
 
 ### Methods  {#Label-Methods}
 
 {:.methods}
-None
 
+{:id="Label.SetShadow" class="method"} <i/> SetShadow(*x*{:.number},*y*{:.number},*radius*{:.number},*color*{:.color})
+: Add a blurred shadow of text below text
+
+{:id="Label.StartAnimation" class="method"} <i/> StartAnimation(*style*{:.text})
+: Allows you to set animation style. Valid (case-insensitive) values are: FadeIn, FadeOut, Flip, Bounce, Blink, ZoomIn, ZoomOut, Rotate, Move, SlideDown, SlideUp. If invalid style is used, animation will be removed.
+
+{:id="Label.StopAnimation" class="method"} <i/> StopAnimation()
+: Stop currently running animations if any
 
 ## ListPicker  {#ListPicker}
 
@@ -983,6 +1003,12 @@ Users enter passwords in a password text box component, which hides the text tha
 
 {:id="PasswordTextBox.RequestFocus" class="method"} <i/> RequestFocus()
 : Request focus to current `PasswordTextBox`.
+
+{:id="PasswordTextBox.StartAnimation" class="method"} <i/> StartAnimation(*style*{:.text})
+: Allows you to set animation style. Valid (case-insensitive) values are: FadeIn, FadeOut, Flip, Bounce, Blink, ZoomIn, ZoomOut, Rotate, Move, SlideDown, SlideUp. If invalid style is used, animation will be removed.
+
+{:id="PasswordTextBox.StopAnimation" class="method"} <i/> StopAnimation()
+: Stop currently running animations if any
 
 ## Screen  {#Screen}
 
@@ -1568,6 +1594,15 @@ Users enter text in a text box component.
 
 {:id="TextBox.RequestFocus" class="method"} <i/> RequestFocus()
 : Request focus to current `TextBox`.
+
+{:id="TextBox.SetShadow" class="method"} <i/> SetShadow(*x*{:.number},*y*{:.number},*radius*{:.number},*color*{:.color})
+: Add a blurred shadow of text below text
+
+{:id="TextBox.StartAnimation" class="method"} <i/> StartAnimation(*style*{:.text})
+: Allows you to set animation style. Valid (case-insensitive) values are: FadeIn, FadeOut, Flip, Bounce, Blink, ZoomIn, ZoomOut, Rotate, Move, SlideDown, SlideUp. If invalid style is used, animation will be removed.
+
+{:id="TextBox.StopAnimation" class="method"} <i/> StopAnimation()
+: Stop currently running animations if any
 
 ## TimePicker  {#TimePicker}
 

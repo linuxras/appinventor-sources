@@ -193,6 +193,7 @@ public final class MockComponentsUtil {
     }
     DOM.setStyleAttribute(widget.getElement(), "fontFamily", typeface);
   }
+  
 
   /**
    * Sets the text alignment for the given widget.

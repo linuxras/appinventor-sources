@@ -8,9 +8,12 @@ package com.google.appinventor.components.runtime.util;
 
 import com.google.appinventor.components.runtime.Component;
 
+import android.app.Activity;
 import android.content.res.ColorStateList;
 import android.graphics.Typeface;
 import android.view.Gravity;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 import android.text.Html;
 import android.content.Context;
@@ -252,5 +255,72 @@ public class TextViewUtil {
   public static void setMinSize(TextView textview, int minWidth, int minHeight) {
     TextViewUtil.setMinWidth(textview, minWidth);
     TextViewUtil.setMinHeight(textview, minHeight);
+  }
+  
+  public static void setShadowLayer(TextView view, float radius, float x, float y, int color) {
+    view.setShadowLayer(radius, x, y, color);
+    view.invalidate();
+  }
+
+  public static boolean setAnimation(TextView view, Activity activity, String style) {
+    boolean rv = true;
+    Animation animation;
+    if(style.equalsIgnoreCase("FadeIn")) {
+      animation = AnimationUtils.loadAnimation(activity, 
+          activity.getResources().getIdentifier("fade_in", "anim", activity.getPackageName()));
+      view.startAnimation(animation);
+    } else if (style.equalsIgnoreCase("FadeOut")) {
+      animation = AnimationUtils.loadAnimation(activity, 
+          activity.getResources().getIdentifier("fade_out", "anim", activity.getPackageName()));
+      view.startAnimation(animation);
+    } else if (style.equalsIgnoreCase("Flip")) {
+      animation = AnimationUtils.loadAnimation(activity, 
+          activity.getResources().getIdentifier("flip", "anim", activity.getPackageName()));
+      view.startAnimation(animation);
+    } else if (style.equalsIgnoreCase("Bounce")) {
+      animation = AnimationUtils.loadAnimation(activity, 
+          activity.getResources().getIdentifier("bounce", "anim", activity.getPackageName()));
+      view.startAnimation(animation);
+    } else if (style.equalsIgnoreCase("Blink")) {
+      animation = AnimationUtils.loadAnimation(activity, 
+          activity.getResources().getIdentifier("blink", "anim", activity.getPackageName()));
+      view.startAnimation(animation);
+    } else if (style.equalsIgnoreCase("ZoomIn")) {
+      animation = AnimationUtils.loadAnimation(activity, 
+          activity.getResources().getIdentifier("zoom_in", "anim", activity.getPackageName()));
+      view.startAnimation(animation);
+    } else if (style.equalsIgnoreCase("ZoomOut")) {
+      animation = AnimationUtils.loadAnimation(activity, 
+          activity.getResources().getIdentifier("zoom_out", "anim", activity.getPackageName()));
+      view.startAnimation(animation);
+    } else if (style.equalsIgnoreCase("Rotate")) {
+      animation = AnimationUtils.loadAnimation(activity, 
+          activity.getResources().getIdentifier("rotate", "anim", activity.getPackageName()));
+      view.startAnimation(animation);
+    } else if (style.equalsIgnoreCase("Move")) {
+      animation = AnimationUtils.loadAnimation(activity, 
+          activity.getResources().getIdentifier("move", "anim", activity.getPackageName()));
+      view.startAnimation(animation);
+    } else if (style.equalsIgnoreCase("SlideDown")) {
+      animation = AnimationUtils.loadAnimation(activity, 
+          activity.getResources().getIdentifier("slide_down", "anim", activity.getPackageName()));
+      view.startAnimation(animation);
+    } else if (style.equalsIgnoreCase("SlideUp")) {
+      animation = AnimationUtils.loadAnimation(activity, 
+          activity.getResources().getIdentifier("slide_up", "anim", activity.getPackageName()));
+      view.startAnimation(animation);
+    } else {
+      rv = false;
+    }
+    return rv;
+  }
+ 
+  public static void stopAnimation(TextView view) {
+    Animation anim = view.getAnimation();
+    if(anim != null) {
+      anim.cancel();
+    }
+    view.setAnimation(null);
+    view.invalidate();
   }
 }

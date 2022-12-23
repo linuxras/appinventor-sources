@@ -270,6 +270,12 @@ An `EmailPicker` is a kind of text box. If the user begins entering the name or 
 {:id="EmailPicker.RequestFocus" class="method"} <i/> RequestFocus()
 : Request focus to current `EmailPicker`.
 
+{:id="EmailPicker.StartAnimation" class="method"} <i/> StartAnimation(*style*{:.text})
+: Allows you to set animation style. Valid (case-insensitive) values are: FadeIn, FadeOut, Flip, Bounce, Blink, ZoomIn, ZoomOut, Rotate, Move, SlideDown, SlideUp. If invalid style is used, animation will be removed.
+
+{:id="EmailPicker.StopAnimation" class="method"} <i/> StopAnimation()
+: Stop currently running animations if any
+
 ## PhoneCall  {#PhoneCall}
 
 ![PhoneCall component icon](images/phonecall.png)

@@ -8,6 +8,7 @@ package com.google.appinventor.components.runtime;
 
 import com.google.appinventor.components.annotations.DesignerComponent;
 import com.google.appinventor.components.annotations.DesignerProperty;
+import com.google.appinventor.components.annotations.IsColor;
 import com.google.appinventor.components.annotations.PropertyCategory;
 import com.google.appinventor.components.annotations.SimpleFunction;
 import com.google.appinventor.components.annotations.SimpleObject;
@@ -15,6 +16,7 @@ import com.google.appinventor.components.annotations.SimpleProperty;
 import com.google.appinventor.components.common.ComponentCategory;
 import com.google.appinventor.components.common.PropertyTypeConstants;
 import com.google.appinventor.components.common.YaVersion;
+import com.google.appinventor.components.runtime.util.TextViewUtil;
 
 import android.content.Context;
 import android.text.InputType;
@@ -236,6 +238,11 @@ public final class TextBox extends TextBoxBase {
   public void ReadOnly(boolean readOnly) {
     this.readOnly = readOnly;
     view.setEnabled(!readOnly);
+  }
+  
+  @SimpleFunction(description = "Add a blurred shadow of text below text")
+  public void SetShadow(float x, float y, float radius, @IsColor int color) {
+    TextViewUtil.setShadowLayer(view, radius, x, y, color);
   }
 
   // TODO(halabelson): We might also want a method to show the keyboard.
