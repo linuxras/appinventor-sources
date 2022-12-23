@@ -99,6 +99,8 @@ public final class Label extends AndroidViewComponent implements AccessibleCompo
   // Marquee repeat limit, -1 is infinate
   private int marqueeRepeatLimit;
 
+  private double rotationAngle = 0.0;
+
   /**
    * Creates a new Label component.
    *
@@ -539,6 +541,19 @@ private void setLabelMargins(boolean hasMargins) {
   public void MarqueeRepeatLimit(int limit) {
     marqueeRepeatLimit = limit;
     view.setMarqueeRepeatLimit(limit);
+  }
+
+  @SimpleProperty(category = PropertyCategory.APPEARANCE,
+      description = "Sets the degrees that the view is rotated around the pivot point. Increasing values result in clockwise rotation.")
+  public double RotationAngle() {
+    return rotationAngle;
+  }
+
+  @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_FLOAT, defaultValue = "0.0")
+  @SimpleProperty
+  public void RotationAngle(double angle) {
+    rotationAngle = angle;
+    TextViewUtil.setRotationAngle(view, rotationAngle);
   }
   
   @SimpleFunction(description = "Add a blurred shadow of text below text")

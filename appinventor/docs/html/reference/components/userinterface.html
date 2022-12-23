@@ -499,6 +499,8 @@ Valid values for the month field are 1-12 and 1-31 for the day field.</dd>
   <dd>Property for Marquee</dd>
   <dt id="Label.MarqueeRepeatLimit" class="number"><em>MarqueeRepeatLimit</em></dt>
   <dd>Property for MarqueeRepeatLimit</dd>
+  <dt id="Label.RotationAngle" class="number"><em>RotationAngle</em></dt>
+  <dd>Sets the degrees that the view is rotated around the pivot point. Increasing values result in clockwise rotation.</dd>
   <dt id="Label.Text" class="text"><em>Text</em></dt>
   <dd>Specifies the text displayed by the label.</dd>
   <dt id="Label.TextAlignment" class="number do"><em>TextAlignment</em></dt>
@@ -1366,6 +1368,8 @@ having dark grey components.</li>
  [</code>Text`](#TextBox.Text) property.</dd>
   <dt id="TextBox.ReadOnly" class="boolean"><em>ReadOnly</em></dt>
   <dd>Whether the TextBox is read-only. By default, this is <code class="logic block highlighter-rouge">true</code>.</dd>
+  <dt id="TextBox.RotationAngle" class="number"><em>RotationAngle</em></dt>
+  <dd>Sets the degrees that the view is rotated around the pivot point. Increasing values result in clockwise rotation.</dd>
   <dt id="TextBox.Text" class="text"><em>Text</em></dt>
   <dd>The text in the <code class="highlighter-rouge">TextBox</code>, which can be set by the programmer in the Designer or Blocks Editor,
  or it can be entered by the user (unless the <a href="#TextBox.Enabled"><code class="highlighter-rouge">Enabled</code></a> property is false).</dd>
@@ -1406,6 +1410,10 @@ having dark grey components.</li>
  keyboard when the users presses the Done key.</dd>
   <dt id="TextBox.RequestFocus" class="method"><i></i> RequestFocus()</dt>
   <dd>Request focus to current <code class="highlighter-rouge">TextBox</code>.</dd>
+  <dt id="TextBox.SetCursorAt" class="method"><i></i> SetCursorAt(<em class="number">position</em>)</dt>
+  <dd>Set the cursor to the given position.</dd>
+  <dt id="TextBox.SetCursorAtEnd" class="method"><i></i> SetCursorAtEnd()</dt>
+  <dd>Set the cursor position to the end</dd>
   <dt id="TextBox.SetShadow" class="method"><i></i> SetShadow(<em class="number">x</em>,<em class="number">y</em>,<em class="number">radius</em>,<em class="color">color</em>)</dt>
   <dd>Add a blurred shadow of text below text</dd>
   <dt id="TextBox.StartAnimation" class="method"><i></i> StartAnimation(<em class="text">style</em>)</dt>

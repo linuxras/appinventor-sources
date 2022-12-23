@@ -323,4 +323,9 @@ public class TextViewUtil {
     view.setAnimation(null);
     view.invalidate();
   }
+
+  public static void setRotationAngle(TextView view, double angle) {
+    view.setRotation((float)angle);
+    view.invalidate();
+  }
 }

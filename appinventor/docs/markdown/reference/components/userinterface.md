@@ -479,6 +479,9 @@ Labels are components used to show text.
 {:id="Label.MarqueeRepeatLimit" .number} *MarqueeRepeatLimit*
 : Property for MarqueeRepeatLimit
 
+{:id="Label.RotationAngle" .number} *RotationAngle*
+: Sets the degrees that the view is rotated around the pivot point. Increasing values result in clockwise rotation.
+
 {:id="Label.Text" .text} *Text*
 : Specifies the text displayed by the label.
 
@@ -1547,6 +1550,9 @@ Users enter text in a text box component.
 {:id="TextBox.ReadOnly" .boolean} *ReadOnly*
 : Whether the TextBox is read-only. By default, this is `true`{:.logic.block}.
 
+{:id="TextBox.RotationAngle" .number} *RotationAngle*
+: Sets the degrees that the view is rotated around the pivot point. Increasing values result in clockwise rotation.
+
 {:id="TextBox.Text" .text} *Text*
 : The text in the `TextBox`, which can be set by the programmer in the Designer or Blocks Editor,
  or it can be entered by the user (unless the [`Enabled`](#TextBox.Enabled) property is false).
@@ -1594,6 +1600,12 @@ Users enter text in a text box component.
 
 {:id="TextBox.RequestFocus" class="method"} <i/> RequestFocus()
 : Request focus to current `TextBox`.
+
+{:id="TextBox.SetCursorAt" class="method"} <i/> SetCursorAt(*position*{:.number})
+: Set the cursor to the given position.
+
+{:id="TextBox.SetCursorAtEnd" class="method"} <i/> SetCursorAtEnd()
+: Set the cursor position to the end
 
 {:id="TextBox.SetShadow" class="method"} <i/> SetShadow(*x*{:.number},*y*{:.number},*radius*{:.number},*color*{:.color})
 : Add a blurred shadow of text below text
