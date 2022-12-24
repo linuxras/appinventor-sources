@@ -860,6 +860,8 @@ Valid values for the month field are 1-12 and 1-31 for the day field.</dd>
  the Blocks Editor. The default background color is ‘default’ (shaded 3-D look).</dd>
   <dt id="PasswordTextBox.Enabled" class="boolean"><em>Enabled</em></dt>
   <dd>If set, user can enter text into the <code class="highlighter-rouge">PasswordTextBox</code>.</dd>
+  <dt id="PasswordTextBox.ErrorText" class="text"><em>ErrorText</em></dt>
+  <dd>Sets the right-hand compound drawable of the PasswordTextBox to the “error” icon and sets an error message that will be displayed in a popup when the PasswordTextBox has focus.</dd>
   <dt id="PasswordTextBox.FontBold" class="boolean do"><em>FontBold</em></dt>
   <dd>Specifies whether the text of the <code class="highlighter-rouge">PasswordTextBox</code> should be bold.
  Some fonts do not support bold.</dd>
@@ -885,6 +887,8 @@ Valid values for the month field are 1-12 and 1-31 for the day field.</dd>
  [</code>Text`](#PasswordTextBox.Text) property.</dd>
   <dt id="PasswordTextBox.PasswordVisible" class="boolean bo"><em>PasswordVisible</em></dt>
   <dd>Specifies whether the password is hidden (default) or shown.</dd>
+  <dt id="PasswordTextBox.SelectAllOnFocus" class="boolean"><em>SelectAllOnFocus</em></dt>
+  <dd>Set the PasswordTextBox so that when it takes focus, all the text is selected.</dd>
   <dt id="PasswordTextBox.Text" class="text"><em>Text</em></dt>
   <dd>The text in the <code class="highlighter-rouge">PasswordTextBox</code>, which can be set by the programmer in the Designer or Blocks Editor,
  or it can be entered by the user (unless the <a href="#PasswordTextBox.Enabled"><code class="highlighter-rouge">Enabled</code></a> property is false).</dd>
@@ -909,12 +913,16 @@ Valid values for the month field are 1-12 and 1-31 for the day field.</dd>
 <h3 id="PasswordTextBox-Events">Events</h3>
 
 <dl class="events">
+  <dt id="PasswordTextBox.EnterPressed">EnterPressed()</dt>
+  <dd>Event raised when Enter has been pressed in <code class="highlighter-rouge">PasswordTextBox</code>.</dd>
   <dt id="PasswordTextBox.GotFocus">GotFocus()</dt>
   <dd>Event raised when the <code class="highlighter-rouge">PasswordTextBox</code> is selected for input, such as by
  the user touching it.</dd>
   <dt id="PasswordTextBox.LostFocus">LostFocus()</dt>
   <dd>Event raised when the <code class="highlighter-rouge">PasswordTextBox</code> is no longer selected for input, such
  as if the user touches a different text box.</dd>
+  <dt id="PasswordTextBox.TextChanged">TextChanged()</dt>
+  <dd>Event raised when text has changed in <code class="highlighter-rouge">PasswordTextBox</code>.</dd>
 </dl>
 
 <h3 id="PasswordTextBox-Methods">Methods</h3>
@@ -1338,6 +1346,8 @@ having dark grey components.</li>
  the Blocks Editor. The default background color is ‘default’ (shaded 3-D look).</dd>
   <dt id="TextBox.Enabled" class="boolean"><em>Enabled</em></dt>
   <dd>If set, user can enter text into the <code class="highlighter-rouge">TextBox</code>.</dd>
+  <dt id="TextBox.ErrorText" class="text"><em>ErrorText</em></dt>
+  <dd>Sets the right-hand compound drawable of the TextBox to the “error” icon and sets an error message that will be displayed in a popup when the TextBox has focus.</dd>
   <dt id="TextBox.FontBold" class="boolean do"><em>FontBold</em></dt>
   <dd>Specifies whether the text of the <code class="highlighter-rouge">TextBox</code> should be bold.
  Some fonts do not support bold.</dd>
@@ -1370,6 +1380,8 @@ having dark grey components.</li>
   <dd>Whether the TextBox is read-only. By default, this is <code class="logic block highlighter-rouge">true</code>.</dd>
   <dt id="TextBox.RotationAngle" class="number"><em>RotationAngle</em></dt>
   <dd>Sets the degrees that the view is rotated around the pivot point. Increasing values result in clockwise rotation.</dd>
+  <dt id="TextBox.SelectAllOnFocus" class="boolean"><em>SelectAllOnFocus</em></dt>
+  <dd>Set the TextBox so that when it takes focus, all the text is selected.</dd>
   <dt id="TextBox.Text" class="text"><em>Text</em></dt>
   <dd>The text in the <code class="highlighter-rouge">TextBox</code>, which can be set by the programmer in the Designer or Blocks Editor,
  or it can be entered by the user (unless the <a href="#TextBox.Enabled"><code class="highlighter-rouge">Enabled</code></a> property is false).</dd>
@@ -1394,12 +1406,16 @@ having dark grey components.</li>
 <h3 id="TextBox-Events">Events</h3>
 
 <dl class="events">
+  <dt id="TextBox.EnterPressed">EnterPressed()</dt>
+  <dd>Event raised when Enter has been pressed in <code class="highlighter-rouge">TextBox</code>.</dd>
   <dt id="TextBox.GotFocus">GotFocus()</dt>
   <dd>Event raised when the <code class="highlighter-rouge">TextBox</code> is selected for input, such as by
  the user touching it.</dd>
   <dt id="TextBox.LostFocus">LostFocus()</dt>
   <dd>Event raised when the <code class="highlighter-rouge">TextBox</code> is no longer selected for input, such
  as if the user touches a different text box.</dd>
+  <dt id="TextBox.TextChanged">TextChanged()</dt>
+  <dd>Event raised when text has changed in <code class="highlighter-rouge">TextBox</code>.</dd>
 </dl>
 
 <h3 id="TextBox-Methods">Methods</h3>
@@ -1410,6 +1426,8 @@ having dark grey components.</li>
  keyboard when the users presses the Done key.</dd>
   <dt id="TextBox.RequestFocus" class="method"><i></i> RequestFocus()</dt>
   <dd>Request focus to current <code class="highlighter-rouge">TextBox</code>.</dd>
+  <dt id="TextBox.SelectAll" class="method"><i></i> SelectAll()</dt>
+  <dd>Highlights all text in this TextBox</dd>
   <dt id="TextBox.SetCursorAt" class="method"><i></i> SetCursorAt(<em class="number">position</em>)</dt>
   <dd>Set the cursor to the given position.</dd>
   <dt id="TextBox.SetCursorAtEnd" class="method"><i></i> SetCursorAtEnd()</dt>

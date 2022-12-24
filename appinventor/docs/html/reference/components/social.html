@@ -291,6 +291,8 @@
  the Blocks Editor. The default background color is ‘default’ (shaded 3-D look).</dd>
   <dt id="EmailPicker.Enabled" class="boolean"><em>Enabled</em></dt>
   <dd>If set, user can enter text into the <code class="highlighter-rouge">EmailPicker</code>.</dd>
+  <dt id="EmailPicker.ErrorText" class="text"><em>ErrorText</em></dt>
+  <dd>Sets the right-hand compound drawable of the EmailPicker to the “error” icon and sets an error message that will be displayed in a popup when the EmailPicker has focus.</dd>
   <dt id="EmailPicker.FontBold" class="boolean do"><em>FontBold</em></dt>
   <dd>Specifies whether the text of the <code class="highlighter-rouge">EmailPicker</code> should be bold.
  Some fonts do not support bold.</dd>
@@ -309,6 +311,8 @@
  of the <a href="userinterface.html#Screen.Height"><code class="highlighter-rouge">Screen</code>’s <code class="highlighter-rouge">Height</code></a>.</dd>
   <dt id="EmailPicker.Hint" class="text"><em>Hint</em></dt>
   <dd><code class="highlighter-rouge">EmailPicker</code> hint for the user.</dd>
+  <dt id="EmailPicker.SelectAllOnFocus" class="boolean"><em>SelectAllOnFocus</em></dt>
+  <dd>Set the EmailPicker so that when it takes focus, all the text is selected.</dd>
   <dt id="EmailPicker.Text" class="text"><em>Text</em></dt>
   <dd>The text in the <code class="highlighter-rouge">EmailPicker</code>, which can be set by the programmer in the Designer or Blocks Editor,
  or it can be entered by the user (unless the <a href="#EmailPicker.Enabled"><code class="highlighter-rouge">Enabled</code></a> property is false).</dd>
@@ -333,12 +337,16 @@
 <h3 id="EmailPicker-Events">Events</h3>
 
 <dl class="events">
+  <dt id="EmailPicker.EnterPressed">EnterPressed()</dt>
+  <dd>Event raised when Enter has been pressed in <code class="highlighter-rouge">EmailPicker</code>.</dd>
   <dt id="EmailPicker.GotFocus">GotFocus()</dt>
   <dd>Event raised when the <code class="highlighter-rouge">EmailPicker</code> is selected for input, such as by
  the user touching it.</dd>
   <dt id="EmailPicker.LostFocus">LostFocus()</dt>
   <dd>Event raised when the <code class="highlighter-rouge">EmailPicker</code> is no longer selected for input, such
  as if the user touches a different text box.</dd>
+  <dt id="EmailPicker.TextChanged">TextChanged()</dt>
+  <dd>Event raised when text has changed in <code class="highlighter-rouge">EmailPicker</code>.</dd>
 </dl>
 
 <h3 id="EmailPicker-Methods">Methods</h3>

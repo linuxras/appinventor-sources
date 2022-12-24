@@ -118,6 +118,7 @@ public final class TextBox extends TextBoxBase {
     NumbersOnly(false);
     MultiLine(false);
     ReadOnly(false);
+    SelectAllOnFocus(false);
 
     // We need to set the IME options here.  Otherwise, Android's default
     // behavior is that the action button will be Done or Next, depending on
@@ -261,6 +262,11 @@ public final class TextBox extends TextBoxBase {
     }
     rotationAngle = angle;
     TextViewUtil.setRotationAngle(view, rotationAngle);
+  }
+
+  @SimpleFunction(description = "Highlights all text in this %type%")
+  public void SelectAll() {
+      view.selectAll();
   }
 
   @SimpleFunction(description = "Set the cursor to the given position.")

@@ -25,9 +25,15 @@ import com.google.appinventor.components.runtime.util.ViewUtil;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
+import android.view.KeyEvent;
 import android.widget.EditText;
+import android.widget.TextView;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Underlying base class for TextBox, not directly accessible to Simple
@@ -38,7 +44,8 @@ import android.widget.EditText;
 
 @SimpleObject
 public abstract class TextBoxBase extends AndroidViewComponent
-    implements OnFocusChangeListener, AccessibleComponent {
+    implements OnFocusChangeListener, AccessibleComponent, TextWatcher, 
+               TextView.OnEditorActionListener {
 
   protected final EditText view;
 
@@ -75,6 +82,14 @@ public abstract class TextBoxBase extends AndroidViewComponent
   //The default text color of the textbox hint, according to theme
   private int hintColorDefault;
 
+  // If true, then all text in textbox will be highlighted on focus
+  private boolean selectAllOnFocus;
+
+  //The text to show in error popup
+  private String errorText;
+
+  private List<Integer> enterActionIds = Arrays.asList(2, 3, 4, 5, 6, 7);
+
   /**
    * Creates a new TextBoxBase component
    *
@@ -96,6 +111,9 @@ public abstract class TextBoxBase extends AndroidViewComponent
 
     // Listen to focus changes
     view.setOnFocusChangeListener(this);
+    view.setOnEditorActionListener(this);
+    // Listen to text changes
+    view.addTextChangedListener(this);
 
     defaultTextBoxDrawable = view.getBackground();
 
@@ -132,6 +150,7 @@ public abstract class TextBoxBase extends AndroidViewComponent
     Text("");
     TextColor(Component.COLOR_DEFAULT);
     BackgroundColor(Component.COLOR_DEFAULT);
+    ErrorText("");
   }
 
   @Override
@@ -500,6 +519,46 @@ public abstract class TextBoxBase extends AndroidViewComponent
     }
   }
 
+  @SimpleProperty(
+    category = PropertyCategory.BEHAVIOR,
+    description = "Set the %type% so that when it takes focus, all the text is selected."
+  )
+  public boolean SelectAllOnFocus() {
+    return selectAllOnFocus;
+  }
+
+  @DesignerProperty(
+    editorType = PropertyTypeConstants.PROPERTY_TYPE_BOOLEAN,
+    defaultValue = "False"
+  )
+  @SimpleProperty
+  public void SelectAllOnFocus(boolean selectAllOnFocus) {
+    this.selectAllOnFocus = selectAllOnFocus;
+    view.setSelectAllOnFocus(selectAllOnFocus);
+  }
+  
+  @SimpleProperty(
+    category = PropertyCategory.APPEARANCE,
+    description = "Sets the right-hand compound drawable of the %type% to the \"error\" icon" +
+    " and sets an error message that will be displayed in a popup when the %type% has focus. "
+  )
+  public String ErrorText() {
+    return errorText;
+  }
+
+  @DesignerProperty(
+    editorType = PropertyTypeConstants.PROPERTY_TYPE_TEXTAREA,
+    defaultValue = ""
+  )
+  @SimpleProperty
+  public void ErrorText(String errorText) {
+    this.errorText = errorText;
+    if(errorText.isEmpty()) {
+        this.errorText = null;
+    }
+    view.setError(this.errorText);
+  }
+
   /**
    * Request focus to current `%type%`.
    */
@@ -521,6 +580,22 @@ public abstract class TextBoxBase extends AndroidViewComponent
   @SimpleFunction(description = "Stop currently running animations if any")
   public void StopAnimation() {
     TextViewUtil.stopAnimation(view);
+  }
+
+  /**
+   * Event raised when text has changed in `%type%`.
+   */
+  @SimpleEvent(description = "Event raised when the text has been changed in %type%.")
+  public void TextChanged() {
+    EventDispatcher.dispatchEvent(this, "TextChanged");
+  }
+
+  /**
+   * Event raised when Enter has been pressed in `%type%`.
+   */
+  @SimpleEvent(description = "Event raised when Enter has been pressed in %type%.")
+  public void EnterPressed() {
+    EventDispatcher.dispatchEvent(this, "EnterPressed");
   }
 
   // OnFocusChangeListener implementation
@@ -585,5 +660,35 @@ public abstract class TextBoxBase extends AndroidViewComponent
   @Override
   public boolean getLargeFont() {
     return isBigText;
+  }
+
+  //TextWatcher implementation
+
+  @Override
+  public void beforeTextChanged (CharSequence s, int start, int count, int after) {}
+
+  @Override
+  public void onTextChanged (CharSequence s, int start, int before, int count) {}
+
+  @Override
+  public void afterTextChanged (Editable s) {
+      container.$form().runOnUiThread(new Runnable() {
+          public void run() {
+              TextBoxBase.this.TextChanged();
+          }
+      });
+  }
+
+  // Listen for enter key
+  public boolean onEditorAction (TextView v, int actionId, KeyEvent event) {
+      if(enterActionIds.contains(actionId)) {
+          container.$form().runOnUiThread(new Runnable() {
+              public void run() {
+                  TextBoxBase.this.EnterPressed();
+              }
+          });
+          return true;
+      }
+      return false;
   }
 }

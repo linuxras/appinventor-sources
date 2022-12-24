@@ -929,6 +929,9 @@ Users enter passwords in a password text box component, which hides the text tha
 {:id="PasswordTextBox.Enabled" .boolean} *Enabled*
 : If set, user can enter text into the `PasswordTextBox`.
 
+{:id="PasswordTextBox.ErrorText" .text} *ErrorText*
+: Sets the right-hand compound drawable of the PasswordTextBox to the "error" icon and sets an error message that will be displayed in a popup when the PasswordTextBox has focus.
+
 {:id="PasswordTextBox.FontBold" .boolean .do} *FontBold*
 : Specifies whether the text of the `PasswordTextBox` should be bold.
  Some fonts do not support bold.
@@ -963,6 +966,9 @@ Users enter passwords in a password text box component, which hides the text tha
 {:id="PasswordTextBox.PasswordVisible" .boolean .bo} *PasswordVisible*
 : Specifies whether the password is hidden (default) or shown.
 
+{:id="PasswordTextBox.SelectAllOnFocus" .boolean} *SelectAllOnFocus*
+: Set the PasswordTextBox so that when it takes focus, all the text is selected.
+
 {:id="PasswordTextBox.Text" .text} *Text*
 : The text in the `PasswordTextBox`, which can be set by the programmer in the Designer or Blocks Editor,
  or it can be entered by the user (unless the [`Enabled`](#PasswordTextBox.Enabled) property is false).
@@ -992,6 +998,9 @@ Users enter passwords in a password text box component, which hides the text tha
 
 {:.events}
 
+{:id="PasswordTextBox.EnterPressed"} EnterPressed()
+: Event raised when Enter has been pressed in `PasswordTextBox`.
+
 {:id="PasswordTextBox.GotFocus"} GotFocus()
 : Event raised when the `PasswordTextBox` is selected for input, such as by
  the user touching it.
@@ -999,6 +1008,9 @@ Users enter passwords in a password text box component, which hides the text tha
 {:id="PasswordTextBox.LostFocus"} LostFocus()
 : Event raised when the `PasswordTextBox` is no longer selected for input, such
  as if the user touches a different text box.
+
+{:id="PasswordTextBox.TextChanged"} TextChanged()
+: Event raised when text has changed in `PasswordTextBox`.
 
 ### Methods  {#PasswordTextBox-Methods}
 
@@ -1510,6 +1522,9 @@ Users enter text in a text box component.
 {:id="TextBox.Enabled" .boolean} *Enabled*
 : If set, user can enter text into the `TextBox`.
 
+{:id="TextBox.ErrorText" .text} *ErrorText*
+: Sets the right-hand compound drawable of the TextBox to the "error" icon and sets an error message that will be displayed in a popup when the TextBox has focus.
+
 {:id="TextBox.FontBold" .boolean .do} *FontBold*
 : Specifies whether the text of the `TextBox` should be bold.
  Some fonts do not support bold.
@@ -1553,6 +1568,9 @@ Users enter text in a text box component.
 {:id="TextBox.RotationAngle" .number} *RotationAngle*
 : Sets the degrees that the view is rotated around the pivot point. Increasing values result in clockwise rotation.
 
+{:id="TextBox.SelectAllOnFocus" .boolean} *SelectAllOnFocus*
+: Set the TextBox so that when it takes focus, all the text is selected.
+
 {:id="TextBox.Text" .text} *Text*
 : The text in the `TextBox`, which can be set by the programmer in the Designer or Blocks Editor,
  or it can be entered by the user (unless the [`Enabled`](#TextBox.Enabled) property is false).
@@ -1582,6 +1600,9 @@ Users enter text in a text box component.
 
 {:.events}
 
+{:id="TextBox.EnterPressed"} EnterPressed()
+: Event raised when Enter has been pressed in `TextBox`.
+
 {:id="TextBox.GotFocus"} GotFocus()
 : Event raised when the `TextBox` is selected for input, such as by
  the user touching it.
@@ -1589,6 +1610,9 @@ Users enter text in a text box component.
 {:id="TextBox.LostFocus"} LostFocus()
 : Event raised when the `TextBox` is no longer selected for input, such
  as if the user touches a different text box.
+
+{:id="TextBox.TextChanged"} TextChanged()
+: Event raised when text has changed in `TextBox`.
 
 ### Methods  {#TextBox-Methods}
 
@@ -1600,6 +1624,9 @@ Users enter text in a text box component.
 
 {:id="TextBox.RequestFocus" class="method"} <i/> RequestFocus()
 : Request focus to current `TextBox`.
+
+{:id="TextBox.SelectAll" class="method"} <i/> SelectAll()
+: Highlights all text in this TextBox
 
 {:id="TextBox.SetCursorAt" class="method"} <i/> SetCursorAt(*position*{:.number})
 : Set the cursor to the given position.

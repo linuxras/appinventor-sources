@@ -201,6 +201,9 @@ An `EmailPicker` is a kind of text box. If the user begins entering the name or 
 {:id="EmailPicker.Enabled" .boolean} *Enabled*
 : If set, user can enter text into the `EmailPicker`.
 
+{:id="EmailPicker.ErrorText" .text} *ErrorText*
+: Sets the right-hand compound drawable of the EmailPicker to the "error" icon and sets an error message that will be displayed in a popup when the EmailPicker has focus.
+
 {:id="EmailPicker.FontBold" .boolean .do} *FontBold*
 : Specifies whether the text of the `EmailPicker` should be bold.
  Some fonts do not support bold.
@@ -225,6 +228,9 @@ An `EmailPicker` is a kind of text box. If the user begins entering the name or 
 
 {:id="EmailPicker.Hint" .text} *Hint*
 : `EmailPicker` hint for the user.
+
+{:id="EmailPicker.SelectAllOnFocus" .boolean} *SelectAllOnFocus*
+: Set the EmailPicker so that when it takes focus, all the text is selected.
 
 {:id="EmailPicker.Text" .text} *Text*
 : The text in the `EmailPicker`, which can be set by the programmer in the Designer or Blocks Editor,
@@ -255,6 +261,9 @@ An `EmailPicker` is a kind of text box. If the user begins entering the name or 
 
 {:.events}
 
+{:id="EmailPicker.EnterPressed"} EnterPressed()
+: Event raised when Enter has been pressed in `EmailPicker`.
+
 {:id="EmailPicker.GotFocus"} GotFocus()
 : Event raised when the `EmailPicker` is selected for input, such as by
  the user touching it.
@@ -262,6 +271,9 @@ An `EmailPicker` is a kind of text box. If the user begins entering the name or 
 {:id="EmailPicker.LostFocus"} LostFocus()
 : Event raised when the `EmailPicker` is no longer selected for input, such
  as if the user touches a different text box.
+
+{:id="EmailPicker.TextChanged"} TextChanged()
+: Event raised when text has changed in `EmailPicker`.
 
 ### Methods  {#EmailPicker-Methods}
 
