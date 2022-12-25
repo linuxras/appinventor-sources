@@ -298,6 +298,9 @@ public final class ErrorMessages {
   public static final int ERROR_INSUFFICIENT_CHART_ENTRY_VALUES = 4103;
   public static final int ERROR_INVALID_CHART_DATA_COLOR = 4104;
 
+  //TextBox and Label Errors
+  public static final int ERROR_VIEW_CANNOT_ROTATE = 4105;
+
   // Start the next group of errors at 4200
 
   // Mapping of error numbers to error message format strings.
@@ -732,6 +735,8 @@ public final class ErrorMessages {
         + "values; Expected %1$d, but was %2$d");
     errorMessages.put(ERROR_INVALID_CHART_DATA_COLOR, "Invalid Chart Data color parameter "
         + "specified: %1$s");
+    errorMessages.put(ERROR_VIEW_CANNOT_ROTATE,
+        "The version of Android on this device does not support view rotation.");
 
   }
 

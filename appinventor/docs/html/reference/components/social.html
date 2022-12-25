@@ -289,6 +289,9 @@
   <dt id="EmailPicker.BackgroundColor" class="color"><em>BackgroundColor</em></dt>
   <dd>The background color of the <code class="highlighter-rouge">EmailPicker</code>`. You can choose a color by name in the Designer or in
  the Blocks Editor. The default background color is ‘default’ (shaded 3-D look).</dd>
+  <dt id="EmailPicker.BackgroundImage" class="text"><em>BackgroundImage</em></dt>
+  <dd>Specifies the path of the <code class="highlighter-rouge">EmailPicker</code>’s <code class="highlighter-rouge">BackgroundImage</code>.
+ <br /><b>Note:</b> If your image has the extension <code class="highlighter-rouge">.9.png</code> it will not be displayed in the Designer</dd>
   <dt id="EmailPicker.Enabled" class="boolean"><em>Enabled</em></dt>
   <dd>If set, user can enter text into the <code class="highlighter-rouge">EmailPicker</code>.</dd>
   <dt id="EmailPicker.ErrorText" class="text"><em>ErrorText</em></dt>
@@ -311,6 +314,8 @@
  of the <a href="userinterface.html#Screen.Height"><code class="highlighter-rouge">Screen</code>’s <code class="highlighter-rouge">Height</code></a>.</dd>
   <dt id="EmailPicker.Hint" class="text"><em>Hint</em></dt>
   <dd><code class="highlighter-rouge">EmailPicker</code> hint for the user.</dd>
+  <dt id="EmailPicker.RotationAngle" class="number"><em>RotationAngle</em></dt>
+  <dd>Sets the degrees that the view is rotated around the pivot point. Increasing values result in clockwise rotation.</dd>
   <dt id="EmailPicker.SelectAllOnFocus" class="boolean"><em>SelectAllOnFocus</em></dt>
   <dd>Set the EmailPicker so that when it takes focus, all the text is selected.</dd>
   <dt id="EmailPicker.Text" class="text"><em>Text</em></dt>
@@ -354,6 +359,12 @@
 <dl class="methods">
   <dt id="EmailPicker.RequestFocus" class="method"><i></i> RequestFocus()</dt>
   <dd>Request focus to current <code class="highlighter-rouge">EmailPicker</code>.</dd>
+  <dt id="EmailPicker.SelectAll" class="method"><i></i> SelectAll()</dt>
+  <dd>Highlights all text in this EmailPicker</dd>
+  <dt id="EmailPicker.SetCursorAt" class="method"><i></i> SetCursorAt(<em class="number">position</em>)</dt>
+  <dd>Set the cursor to the given position.</dd>
+  <dt id="EmailPicker.SetCursorAtEnd" class="method"><i></i> SetCursorAtEnd()</dt>
+  <dd>Set the cursor position to the end</dd>
   <dt id="EmailPicker.StartAnimation" class="method"><i></i> StartAnimation(<em class="text">style</em>)</dt>
   <dd>Allows you to set animation style. Valid (case-insensitive) values are: FadeIn, FadeOut, Flip, Bounce, Blink, ZoomIn, ZoomOut, Rotate, Move, SlideDown, SlideUp. If invalid style is used, animation will be removed.</dd>
   <dt id="EmailPicker.StopAnimation" class="method"><i></i> StopAnimation()</dt>

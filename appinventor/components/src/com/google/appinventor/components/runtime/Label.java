@@ -6,6 +6,7 @@
 
 package com.google.appinventor.components.runtime;
 
+import com.google.appinventor.components.annotations.Asset;
 import com.google.appinventor.components.annotations.DesignerComponent;
 import com.google.appinventor.components.annotations.DesignerProperty;
 import com.google.appinventor.components.annotations.IsColor;
@@ -14,17 +15,34 @@ import com.google.appinventor.components.annotations.SimpleObject;
 import com.google.appinventor.components.annotations.SimpleProperty;
 import com.google.appinventor.components.annotations.SimpleEvent;
 import com.google.appinventor.components.annotations.SimpleFunction;
+import com.google.appinventor.components.annotations.UsesLibraries;
+import com.google.appinventor.components.annotations.UsesPermissions;
 import com.google.appinventor.components.common.ComponentCategory;
 import com.google.appinventor.components.common.PropertyTypeConstants;
 import com.google.appinventor.components.common.YaVersion;
+import com.google.appinventor.components.runtime.util.ErrorMessages;
 import com.google.appinventor.components.runtime.util.TextViewUtil;
+import com.google.appinventor.components.runtime.util.HoneycombUtil;
+import com.google.appinventor.components.runtime.util.MediaUtil;
+import com.google.appinventor.components.runtime.util.SdkLevel;
+import com.google.appinventor.components.runtime.util.ViewUtil;
 
+import android.Manifest;
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Rect;
+import android.graphics.NinePatch;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.NinePatchDrawable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import ua.anatolii.graphics.ninepatch.NinePatchChunk;
+
+import java.io.IOException;
 
 /**
  * Labels are components used to show text.
@@ -40,6 +58,9 @@ import android.widget.TextView;
     "all of which can be set in the Designer or Blocks Editor, control " +
     "the appearance and placement of the text.",
     category = ComponentCategory.USERINTERFACE)
+@UsesPermissions(permissionNames = "android.permission.INTERNET," +
+    "android.permission.READ_EXTERNAL_STORAGE")
+@UsesLibraries(libraries = "ninepatch.jar, ninepatch.aar")
 @SimpleObject
 public final class Label extends AndroidViewComponent implements AccessibleComponent, 
   View.OnClickListener, View.OnLongClickListener {
@@ -101,6 +122,8 @@ public final class Label extends AndroidViewComponent implements AccessibleCompo
 
   private double rotationAngle = 0.0;
 
+  private String backgroundImage;
+
   /**
    * Creates a new Label component.
    *
@@ -148,6 +171,7 @@ public final class Label extends AndroidViewComponent implements AccessibleCompo
     Clickable(false);
     Marquee(false);
     MarqueeRepeatLimit(-1);
+    BackgroundImage("");
   }
 
   // put this in the right file
@@ -552,8 +576,92 @@ private void setLabelMargins(boolean hasMargins) {
   @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_FLOAT, defaultValue = "0.0")
   @SimpleProperty
   public void RotationAngle(double angle) {
+    if(rotationAngle == angle) {
+      return;
+    }
+    if (SdkLevel.getLevel() < SdkLevel.LEVEL_HONEYCOMB) {
+      container.$form().dispatchErrorOccurredEvent(this, "RotationAngle",
+        ErrorMessages.ERROR_VIEW_CANNOT_ROTATE);
+      return;
+    }
+    HoneycombUtil.viewSetRotate(view, angle);
     rotationAngle = angle;
-    TextViewUtil.setRotationAngle(view, rotationAngle);
+  }
+
+  /**
+   * Returns the path of the %type%'s' background image.
+   *
+   * @return  the path of the %type%'s background image
+   */
+  @SimpleProperty(
+      category = PropertyCategory.APPEARANCE,
+      description = "Set background image for %type%")
+  public String BackgroundImage() {
+    return backgroundImage;
+  }
+
+  /**
+   * Specifies the path of the `%type%`'s `BackgroundImage`.
+   * <br/><b>Note:</b> If your image has the extension `.9.png` it will not be displayed in the Designer
+   *
+   * @internaldoc
+   * <p/>See {@link MediaUtil#determineMediaSource} for information about what
+   * a path can be.
+   *
+   * @param path  the path of the %type%'s background image
+   */
+  @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_ASSET,
+      defaultValue = "")
+  @SimpleProperty
+  public void BackgroundImage(@Asset final String path) {
+    if (MediaUtil.isExternalFile(container.$context(), path)
+        && container.$form().isDeniedPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+      container.$form().askPermission(Manifest.permission.READ_EXTERNAL_STORAGE,
+          new PermissionResultHandler() {
+            @Override
+            public void HandlePermissionResponse(String permission, boolean granted) {
+              if (granted) {
+                BackgroundImage(path);
+              } else {
+                container.$form().dispatchPermissionDeniedEvent(Label.this, "BackgroundImage", permission);
+              }
+            }
+          });
+      return;
+    }
+    backgroundImage = (path == null) ? "" : path;
+    Drawable drawable = null;
+
+    //Check for 9-patch image and process with ninepatch library
+    if(!backgroundImage.isEmpty() && backgroundImage.endsWith(".9.png")) {
+      Bitmap bitmap;
+      try {
+        bitmap = BitmapFactory.decodeStream(MediaUtil.openMedia(this.container.$form(), backgroundImage));
+      } catch(Exception e) {
+        bitmap = null;
+      }
+      if(bitmap != null) {
+        byte[] chunk = bitmap.getNinePatchChunk();
+        if(NinePatch.isNinePatchChunk(chunk)) {
+          //Just use it
+          drawable = new NinePatchDrawable(this.container.$form().getResources(), bitmap, chunk, new Rect(), (String) null);
+          ViewUtil.setBackgroundImage(view, drawable);
+        } else {
+          //We know the intent generate it
+          drawable = NinePatchChunk.create9PatchDrawable(this.container.$form(), bitmap, (String) null);
+        }
+      }
+    } else {
+      try {
+        drawable = MediaUtil.getBitmapDrawable(container.$form(), backgroundImage);
+      } catch (IOException ioe) {
+        Log.e("Label", "Unable to load " + backgroundImage);
+        drawable = null;
+      }
+
+    }
+    ViewUtil.setBackgroundImage(view, drawable);
+
   }
   
   @SimpleFunction(description = "Add a blurred shadow of text below text")

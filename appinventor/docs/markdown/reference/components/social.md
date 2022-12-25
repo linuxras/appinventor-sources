@@ -198,6 +198,10 @@ An `EmailPicker` is a kind of text box. If the user begins entering the name or 
 : The background color of the `EmailPicker``. You can choose a color by name in the Designer or in
  the Blocks Editor. The default background color is 'default' (shaded 3-D look).
 
+{:id="EmailPicker.BackgroundImage" .text} *BackgroundImage*
+: Specifies the path of the `EmailPicker`'s `BackgroundImage`.
+ <br/><b>Note:</b> If your image has the extension `.9.png` it will not be displayed in the Designer
+
 {:id="EmailPicker.Enabled" .boolean} *Enabled*
 : If set, user can enter text into the `EmailPicker`.
 
@@ -228,6 +232,9 @@ An `EmailPicker` is a kind of text box. If the user begins entering the name or 
 
 {:id="EmailPicker.Hint" .text} *Hint*
 : `EmailPicker` hint for the user.
+
+{:id="EmailPicker.RotationAngle" .number} *RotationAngle*
+: Sets the degrees that the view is rotated around the pivot point. Increasing values result in clockwise rotation.
 
 {:id="EmailPicker.SelectAllOnFocus" .boolean} *SelectAllOnFocus*
 : Set the EmailPicker so that when it takes focus, all the text is selected.
@@ -281,6 +288,15 @@ An `EmailPicker` is a kind of text box. If the user begins entering the name or 
 
 {:id="EmailPicker.RequestFocus" class="method"} <i/> RequestFocus()
 : Request focus to current `EmailPicker`.
+
+{:id="EmailPicker.SelectAll" class="method"} <i/> SelectAll()
+: Highlights all text in this EmailPicker
+
+{:id="EmailPicker.SetCursorAt" class="method"} <i/> SetCursorAt(*position*{:.number})
+: Set the cursor to the given position.
+
+{:id="EmailPicker.SetCursorAtEnd" class="method"} <i/> SetCursorAtEnd()
+: Set the cursor position to the end
 
 {:id="EmailPicker.StartAnimation" class="method"} <i/> StartAnimation(*style*{:.text})
 : Allows you to set animation style. Valid (case-insensitive) values are: FadeIn, FadeOut, Flip, Bounce, Blink, ZoomIn, ZoomOut, Rotate, Move, SlideDown, SlideUp. If invalid style is used, animation will be removed.

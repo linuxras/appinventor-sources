@@ -106,8 +106,6 @@ public final class TextBox extends TextBoxBase {
   // If true, then text box is read-only
   private boolean readOnly;
 
-  private double rotationAngle = 0.0;
-
   /**
    * Creates a new TextBox component.
    *
@@ -118,7 +116,6 @@ public final class TextBox extends TextBoxBase {
     NumbersOnly(false);
     MultiLine(false);
     ReadOnly(false);
-    SelectAllOnFocus(false);
 
     // We need to set the IME options here.  Otherwise, Android's default
     // behavior is that the action button will be Done or Next, depending on
@@ -246,43 +243,6 @@ public final class TextBox extends TextBoxBase {
   @SimpleFunction(description = "Add a blurred shadow of text below text")
   public void SetShadow(float x, float y, float radius, @IsColor int color) {
     TextViewUtil.setShadowLayer(view, radius, x, y, color);
-  }
-
-  @SimpleProperty(category = PropertyCategory.APPEARANCE,
-      description = "Sets the degrees that the view is rotated around the pivot point. Increasing values result in clockwise rotation.")
-  public double RotationAngle() {
-    return rotationAngle;
-  }
-
-  @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_FLOAT, defaultValue = "0.0")
-  @SimpleProperty
-  public void RotationAngle(double angle) {
-    if(rotationAngle == angle) {
-      return;
-    }
-    rotationAngle = angle;
-    TextViewUtil.setRotationAngle(view, rotationAngle);
-  }
-
-  @SimpleFunction(description = "Highlights all text in this %type%")
-  public void SelectAll() {
-      view.selectAll();
-  }
-
-  @SimpleFunction(description = "Set the cursor to the given position.")
-  public void SetCursorAt(int position) {
-    int len = view.getText().length();
-    if(len >= (position - 1)) {
-      view.setSelection((position - 1));
-    } else {
-      SetCursorAtEnd();
-    }
-  }
-
-  @SimpleFunction(description = "Set the cursor position to the end")
-  public void SetCursorAtEnd() {
-    int len = view.getText().length();
-    view.setSelection(len);
   }
 
   // TODO(halabelson): We might also want a method to show the keyboard.

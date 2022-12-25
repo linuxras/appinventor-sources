@@ -58,7 +58,7 @@ public final class YoungAndroidAssetSelectorPropertyEditor extends AdditionalCho
     VerticalPanel selectorPanel = new VerticalPanel();
     assetsList = new ListBox();
     assetsList.setVisibleItemCount(10);
-    assetsList.setWidth("100%");
+    assetsList.setSize("100%", "100%");
     assetsList.addChangeHandler(new ChangeHandler() {
       @Override
       public void onChange(ChangeEvent event) {

@@ -9,6 +9,7 @@ package com.google.appinventor.components.runtime.util;
 import com.google.appinventor.components.runtime.Component;
 
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.NinePatchDrawable;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -199,6 +200,6 @@ public final class ViewUtil {
 
   public static void setBackgroundDrawable(View view, Drawable drawable) {
     view.setBackgroundDrawable(drawable);
-    view.invalidate();
+    view.requestLayout();
   }
 }

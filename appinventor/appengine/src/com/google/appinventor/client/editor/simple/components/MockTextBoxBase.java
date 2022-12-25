@@ -9,11 +9,18 @@ package com.google.appinventor.client.editor.simple.components;
 import static com.google.appinventor.client.Ode.MESSAGES;
 import com.google.appinventor.client.editor.simple.SimpleEditor;
 import com.google.appinventor.client.editor.youngandroid.YaFormEditor;
+import com.google.appinventor.client.output.OdeLog;
 import com.google.appinventor.components.common.ComponentConstants;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.event.dom.client.ErrorEvent;
+import com.google.gwt.event.dom.client.ErrorHandler;
+import com.google.gwt.event.dom.client.LoadEvent;
+import com.google.gwt.event.dom.client.LoadHandler;
+
+import com.google.gwt.user.client.ui.Image;
 
 
 /**
@@ -27,6 +34,18 @@ abstract class MockTextBoxBase extends MockWrapper implements FormChangeListener
   // GWT widget used to mock a Simple TextBox
   private final TextBox textBoxWidget;
 
+  // Property names
+  private static final String PROPERTY_NAME_IMAGE = "BackgroundImage";
+
+  private boolean hasImage;
+
+  //Maintain the background image so we can reset if image removed
+  private String backgroundColor;
+
+  private final Image image;
+  
+  private String imagePropValue;
+
   /**
    * Creates a new MockTextBox component.
    *
@@ -37,6 +56,23 @@ abstract class MockTextBoxBase extends MockWrapper implements FormChangeListener
 
     // Initialize mock textbox UI
     textBoxWidget = new TextBox();
+
+    image = new Image();
+    image.addErrorHandler(new ErrorHandler() {
+      @Override
+      public void onError(ErrorEvent event) {
+        if (imagePropValue != null && !imagePropValue.isEmpty()) {
+          OdeLog.elog("Error occurred while loading image " + imagePropValue);
+        }
+        refreshForm();
+      }
+    });
+    image.addLoadHandler(new LoadHandler() {
+      @Override
+      public void onLoad(LoadEvent event) {
+        refreshForm();
+      }
+    });
     initWrapper(textBoxWidget);
   }
 
@@ -95,6 +131,10 @@ abstract class MockTextBoxBase extends MockWrapper implements FormChangeListener
    * Sets the textbox's BackgroundColor property to a new value.
    */
   private void setBackgroundColorProperty(String text) {
+    backgroundColor = text;
+    if(hasImage) {
+      return;
+    }
     if (MockComponentsUtil.isDefaultColor(text)) {
       MockForm form = ((YaFormEditor) editor).getForm();
       if (form != null && form.getPropertyValue("HighContrast").equals("True")) {
@@ -186,6 +226,31 @@ abstract class MockTextBoxBase extends MockWrapper implements FormChangeListener
 
   }
 
+  private void setBackgroundImageProperty(String text) {
+    if(text.endsWith(".9.png")) { //If its a 9-patch ignore it here
+      hasImage = false;
+      setBackgroundColorProperty(backgroundColor);
+      return;
+    }
+    imagePropValue = text;
+    String url = convertImagePropertyValueToUrl(text);
+    if (url == null) {
+      hasImage = false;
+      url = "";
+      setBackgroundColorProperty(backgroundColor);
+    } else {
+      hasImage = true;
+      // Layouts do not show a background color if they have an image.
+      // The container's background color shows through any transparent
+      // portions of the Image, an effect we can get in the browser by
+      // setting the widget's background color to COLOR_NONE.
+      MockComponentsUtil.setWidgetBackgroundColor(textBoxWidget,
+              "&H" + COLOR_NONE);
+    }
+    MockComponentsUtil.setWidgetBackgroundImage(textBoxWidget, url);
+    image.setUrl(url);
+  }
+
   // PropertyChangeListener implementation
 
 
@@ -219,6 +284,8 @@ abstract class MockTextBoxBase extends MockWrapper implements FormChangeListener
       refreshForm();
     } else if (propertyName.equals(PROPERTY_NAME_TEXTCOLOR)) {
       setTextColorProperty(newValue);
+    } else if (propertyName.equals(PROPERTY_NAME_IMAGE)) {
+      setBackgroundImageProperty(newValue);
     }
   }
 

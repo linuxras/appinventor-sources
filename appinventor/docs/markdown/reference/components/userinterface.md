@@ -435,6 +435,10 @@ Labels are components used to show text.
 : Specifies the label's background color as an alpha-red-green-blue
  integer.
 
+{:id="Label.BackgroundImage" .text} *BackgroundImage*
+: Specifies the path of the `Label`'s `BackgroundImage`.
+ <br/><b>Note:</b> If your image has the extension `.9.png` it will not be displayed in the Designer
+
 {:id="Label.Clickable" .boolean} *Clickable*
 : Property for Clickable
 
@@ -926,6 +930,10 @@ Users enter passwords in a password text box component, which hides the text tha
 : The background color of the `PasswordTextBox``. You can choose a color by name in the Designer or in
  the Blocks Editor. The default background color is 'default' (shaded 3-D look).
 
+{:id="PasswordTextBox.BackgroundImage" .text} *BackgroundImage*
+: Specifies the path of the `PasswordTextBox`'s `BackgroundImage`.
+ <br/><b>Note:</b> If your image has the extension `.9.png` it will not be displayed in the Designer
+
 {:id="PasswordTextBox.Enabled" .boolean} *Enabled*
 : If set, user can enter text into the `PasswordTextBox`.
 
@@ -965,6 +973,9 @@ Users enter passwords in a password text box component, which hides the text tha
 
 {:id="PasswordTextBox.PasswordVisible" .boolean .bo} *PasswordVisible*
 : Specifies whether the password is hidden (default) or shown.
+
+{:id="PasswordTextBox.RotationAngle" .number} *RotationAngle*
+: Sets the degrees that the view is rotated around the pivot point. Increasing values result in clockwise rotation.
 
 {:id="PasswordTextBox.SelectAllOnFocus" .boolean} *SelectAllOnFocus*
 : Set the PasswordTextBox so that when it takes focus, all the text is selected.
@@ -1018,6 +1029,15 @@ Users enter passwords in a password text box component, which hides the text tha
 
 {:id="PasswordTextBox.RequestFocus" class="method"} <i/> RequestFocus()
 : Request focus to current `PasswordTextBox`.
+
+{:id="PasswordTextBox.SelectAll" class="method"} <i/> SelectAll()
+: Highlights all text in this PasswordTextBox
+
+{:id="PasswordTextBox.SetCursorAt" class="method"} <i/> SetCursorAt(*position*{:.number})
+: Set the cursor to the given position.
+
+{:id="PasswordTextBox.SetCursorAtEnd" class="method"} <i/> SetCursorAtEnd()
+: Set the cursor position to the end
 
 {:id="PasswordTextBox.StartAnimation" class="method"} <i/> StartAnimation(*style*{:.text})
 : Allows you to set animation style. Valid (case-insensitive) values are: FadeIn, FadeOut, Flip, Bounce, Blink, ZoomIn, ZoomOut, Rotate, Move, SlideDown, SlideUp. If invalid style is used, animation will be removed.
@@ -1518,6 +1538,10 @@ Users enter text in a text box component.
 {:id="TextBox.BackgroundColor" .color} *BackgroundColor*
 : The background color of the `TextBox``. You can choose a color by name in the Designer or in
  the Blocks Editor. The default background color is 'default' (shaded 3-D look).
+
+{:id="TextBox.BackgroundImage" .text} *BackgroundImage*
+: Specifies the path of the `TextBox`'s `BackgroundImage`.
+ <br/><b>Note:</b> If your image has the extension `.9.png` it will not be displayed in the Designer
 
 {:id="TextBox.Enabled" .boolean} *Enabled*
 : If set, user can enter text into the `TextBox`.

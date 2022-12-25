@@ -11,6 +11,16 @@ import com.google.appinventor.client.editor.simple.SimpleEditor;
 import com.google.appinventor.client.editor.youngandroid.YaFormEditor;
 import com.google.gwt.safehtml.shared.SimpleHtmlSanitizer;
 import com.google.gwt.user.client.ui.InlineHTML;
+import com.google.appinventor.client.output.OdeLog;
+
+import com.google.appinventor.components.common.ComponentConstants;
+
+import com.google.gwt.event.dom.client.ErrorEvent;
+import com.google.gwt.event.dom.client.ErrorHandler;
+import com.google.gwt.event.dom.client.LoadEvent;
+import com.google.gwt.event.dom.client.LoadHandler;
+
+import com.google.gwt.user.client.ui.Image;
 
 /**
  * Mock Label component.
@@ -22,6 +32,16 @@ public final class MockLabel extends MockVisibleComponent implements FormChangeL
    * Component type name.
    */
   public static final String TYPE = "Label";
+
+  // Property names
+  private static final String PROPERTY_NAME_IMAGE = "BackgroundImage";
+
+  private boolean hasImage;
+
+  //Maintain the background image so we can reset if image removed
+  private String backgroundColor;
+  private final Image image;
+  private String imagePropValue;
 
   // GWT label widget used to mock a Simple Label
   private InlineHTML labelWidget;
@@ -41,6 +61,23 @@ public final class MockLabel extends MockVisibleComponent implements FormChangeL
     // Initialize mock label UI
     labelWidget = new InlineHTML();
     labelWidget.setStylePrimaryName("ode-SimpleMockComponent");
+
+    image = new Image();
+    image.addErrorHandler(new ErrorHandler() {
+      @Override
+      public void onError(ErrorEvent event) {
+        if (imagePropValue != null && !imagePropValue.isEmpty()) {
+          OdeLog.elog("Error occurred while loading image " + imagePropValue);
+        }
+        refreshForm();
+      }
+    });
+    image.addLoadHandler(new LoadHandler() {
+      @Override
+      public void onLoad(LoadEvent event) {
+        refreshForm();
+      }
+    });
     initComponent(labelWidget);
 
   }
@@ -75,6 +112,10 @@ public final class MockLabel extends MockVisibleComponent implements FormChangeL
    * Sets the label's BackgroundColor property to a new value.
    */
   private void setBackgroundColorProperty(String text) {
+    backgroundColor = text;
+    if(hasImage) {
+      return;
+    }
     if (MockComponentsUtil.isDefaultColor(text)) {
       text = "&HFFFFFFFF";  // white
     }
@@ -156,6 +197,31 @@ public final class MockLabel extends MockVisibleComponent implements FormChangeL
     //Just do nothing with this
   }
 
+  private void setBackgroundImageProperty(String text) {
+    if(text.endsWith(".9.png")) { //If its a 9-patch ignore it here
+      hasImage = false;
+      setBackgroundColorProperty(backgroundColor);
+      return;
+    }
+    imagePropValue = text;
+    String url = convertImagePropertyValueToUrl(text);
+    if (url == null) {
+      hasImage = false;
+      url = "";
+      setBackgroundColorProperty(backgroundColor);
+    } else {
+      hasImage = true;
+      // Layouts do not show a background color if they have an image.
+      // The container's background color shows through any transparent
+      // portions of the Image, an effect we can get in the browser by
+      // setting the widget's background color to COLOR_NONE.
+      MockComponentsUtil.setWidgetBackgroundColor(labelWidget,
+              "&H" + COLOR_NONE);
+    }
+    MockComponentsUtil.setWidgetBackgroundImage(labelWidget, url);
+    image.setUrl(url);
+  }
+
   // PropertyChangeListener implementation
 
   @Override
@@ -193,6 +259,8 @@ public final class MockLabel extends MockVisibleComponent implements FormChangeL
       setMarqueeProperty(newValue);
     } else if (propertyName.equals(PROPERTY_NAME_MARQUEEREPEATLIMIT)) {
       setMarqueeRepeatLimit(newValue);
+    } else if (propertyName.equals(PROPERTY_NAME_IMAGE)) {
+      setBackgroundImageProperty(newValue);
     }
   }
 
