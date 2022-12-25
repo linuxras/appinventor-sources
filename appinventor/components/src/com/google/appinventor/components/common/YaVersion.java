@@ -1069,6 +1069,8 @@ public class YaVersion {
   // - Clicked, LongClicked events added.
   // - Basic Animation support added with StartAnimation function
   // - Support for text shadow
+  // - Added BackgroundImage property that support using 9-patch images
+  // - Added RotationAngle
 
   public static final int LABEL_COMPONENT_VERSION = 6;
 
@@ -1222,7 +1224,12 @@ public class YaVersion {
   // - Added PasswordVisible property
   // For For PASSWORDTEXTBOX_COMPONENT_VERSION 5:
   // - Added NumbersOnly property
-  public static final int PASSWORDTEXTBOX_COMPONENT_VERSION = 5;
+  // For PASSWORDTEXTBOX_COMPONENT_VERSION 6
+  // - Basic Animation support added with StartAnimation function
+  // - Support for text shadow
+  // - Added BackgroundImage property that support using 9-patch images
+  // - Added RotationAngle property
+  public static final int PASSWORDTEXTBOX_COMPONENT_VERSION = 6;
 
   // For PEDOMETER_COMPONENT_VERSION 2:
   // - The step sensing algorithm was updated to be more accurate.
@@ -1327,7 +1334,12 @@ public class YaVersion {
   // - RequestFocus method was added
   // For TEXTBOX_COMPONENT_VERSION 6:
   // - ReadOnly property was added
-  public static final int TEXTBOX_COMPONENT_VERSION = 6;
+  // For TEXTBOX_COMPONENT_VERSION 7:
+  // - Basic Animation support added with StartAnimation function
+  // - Support for text shadow
+  // - Added BackgroundImage property that support using 9-patch images
+  // - Added RotationAngle
+  public static final int TEXTBOX_COMPONENT_VERSION = 7;
 
   // For TEXTING_COMPONENT_VERSION 2:
   // Texting over Wifi was implemented using Google Voice
