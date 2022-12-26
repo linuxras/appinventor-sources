@@ -25,6 +25,8 @@
     --danger-bg-color: hsl(356, 100%, 50%);
     --danger-hover-color: hsl(356, 100%, 65%);
     --box-height: calc(100vh - 105px);
+    --palette-bpx-width: 240px;
+    --small-box-width: 222px;
 }
 
 /* Pretty background with particlejs

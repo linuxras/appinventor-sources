@@ -210,12 +210,12 @@ body {
 
 .ode-PaletteBox {
     height: var(--box-height);
-    width: 240px;
+    width: var(--palette-box-width);
 }
 
 .ode-PropertiesBox {
     height: var(--box-height);
-    width: 222px;
+    width: var(--small-box-width);
 }
 
 .ode-StructureAndAssetsBox {
@@ -228,14 +228,17 @@ body {
 
 .ode-SourceStructureBox.ode-Box-body {
     overflow: hidden !important;
+    width: var(--small-box-width);
 }
 
 .ode-AssetListBox {
     height: calc(.3 * var(--box-height));
+    width: var(--small-box-width);
 }
 
 .ode-BlockSelectorBox {
     height: calc(.69 * var(--box-height));
+    width: var(--small-box-width);
 }
 
 .ode-ViewerBox {

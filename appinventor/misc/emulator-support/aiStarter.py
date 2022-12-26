@@ -14,7 +14,8 @@ VERSION = '%d.%d.%d%s' % (config.ANDROID_PLATFORM, config.COMPANION_VERSION, con
 PLATDIR = os.path.abspath(os.path.dirname(sys.argv[0]))
 
 # Path to executables
-ADB = os.path.join(PLATDIR, 'from-Android-SDK', 'platform-tools', 'adb')
+#ADB = os.path.join(PLATDIR, 'from-Android-SDK', 'platform-tools', 'adb')
+ADB = os.path.join(PLATDIR, 'adb')
 RUN_EMULATOR = os.path.join(PLATDIR, 'run-emulator')
 RESET_EMULATOR = os.path.join(PLATDIR, 'reset-emulator')
 KILL_EMULATOR = os.path.join(PLATDIR, 'kill-emulator')
@@ -121,6 +122,7 @@ def replstart(device=None):
     print('Device =', device)
     try:
         subprocess.check_output('"%s" -s %s forward tcp:8001 tcp:8001' % (ADB, device), shell=True)
+        subprocess.check_output('"%s" -s %s reverse tcp:8888 tcp:8888' % (ADB, device), shell=True)
         if re.match('emulator.*', device):  # Only fake the menu key for the emulator
             subprocess.check_output('"%s" -s %s shell input keyevent 82' % (ADB, device), shell=True)
         subprocess.check_output(
