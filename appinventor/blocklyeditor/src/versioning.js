@@ -2101,7 +2101,12 @@ Blockly.Versioning.AllUpgradeMaps =
     // AI2: Add HTMLFormat property
     4: "noUpgrade",
 
-    5: "noUpgrade"
+    5: "noUpgrade",
+    
+    // AI2: Added Clickable, Marquee, MarqueeRepeatLimit and BackgroundImage 
+    // Also added Clicked/LongClicked events
+    // Added StartAnimation/StopAnimation, SetShadow functions
+    6: "noUpgrade"
 
   }, // End Label upgraders
 
@@ -2671,7 +2676,12 @@ Blockly.Versioning.AllUpgradeMaps =
     4: "noUpgrade",
 
     // NumbersOnly was added
-    5: "noUpgrade"
+    5: "noUpgrade",
+    
+    // Added BackgroundImage(9-patch support), RotationAngle properties
+    // Added StartAnimation/StopAnimation & SetShadow functions
+    // Added TextChanged event
+    6: "noUpgrade"
 
   }, // End PasswordTextBox upgraders
 
@@ -3013,7 +3023,12 @@ Blockly.Versioning.AllUpgradeMaps =
     5: "noUpgrade",
 
     // AI3: Added ReadOnly property
-    6: "noUpgrade"
+    6: "noUpgrade",
+    
+    // Added BackgroundImage(9-patch support), RotationAngle properties
+    // Added StartAnimation/StopAnimation & SetShadow functions
+    // Added TextChanged event
+    7: "noUpgrade"
 
   }, // End TextBox upgraders
 

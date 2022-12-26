@@ -6,21 +6,43 @@
 
 package com.google.appinventor.components.runtime;
 
+import com.google.appinventor.components.annotations.Asset;
 import com.google.appinventor.components.annotations.DesignerComponent;
 import com.google.appinventor.components.annotations.DesignerProperty;
 import com.google.appinventor.components.annotations.IsColor;
 import com.google.appinventor.components.annotations.PropertyCategory;
 import com.google.appinventor.components.annotations.SimpleObject;
 import com.google.appinventor.components.annotations.SimpleProperty;
+import com.google.appinventor.components.annotations.SimpleEvent;
+import com.google.appinventor.components.annotations.SimpleFunction;
+import com.google.appinventor.components.annotations.UsesLibraries;
+import com.google.appinventor.components.annotations.UsesPermissions;
 import com.google.appinventor.components.common.ComponentCategory;
 import com.google.appinventor.components.common.PropertyTypeConstants;
 import com.google.appinventor.components.common.YaVersion;
+import com.google.appinventor.components.runtime.util.ErrorMessages;
 import com.google.appinventor.components.runtime.util.TextViewUtil;
+import com.google.appinventor.components.runtime.util.HoneycombUtil;
+import com.google.appinventor.components.runtime.util.MediaUtil;
+import com.google.appinventor.components.runtime.util.SdkLevel;
+import com.google.appinventor.components.runtime.util.ViewUtil;
 
+import android.Manifest;
+import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Rect;
+import android.graphics.NinePatch;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.NinePatchDrawable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import ua.anatolii.graphics.ninepatch.NinePatchChunk;
+
+import java.io.IOException;
 
 /**
  * Labels are components used to show text.
@@ -36,8 +58,12 @@ import android.widget.TextView;
     "all of which can be set in the Designer or Blocks Editor, control " +
     "the appearance and placement of the text.",
     category = ComponentCategory.USERINTERFACE)
+@UsesPermissions(permissionNames = "android.permission.INTERNET," +
+    "android.permission.READ_EXTERNAL_STORAGE")
+@UsesLibraries(libraries = "ninepatch.jar, ninepatch.aar")
 @SimpleObject
-public final class Label extends AndroidViewComponent implements AccessibleComponent{
+public final class Label extends AndroidViewComponent implements AccessibleComponent, 
+  View.OnClickListener, View.OnLongClickListener {
 
   // default margin around a label in DPs
   // note that the spacing between adjacent labels will be twice this value
@@ -51,6 +77,10 @@ public final class Label extends AndroidViewComponent implements AccessibleCompo
   private final TextView view;
 
   private final LinearLayout.LayoutParams linearLayoutParams;
+  
+  private final ComponentContainer container;
+  
+  private final Activity activity;
 
   // Backing for text alignment
   private int textAlignment;
@@ -81,6 +111,18 @@ public final class Label extends AndroidViewComponent implements AccessibleCompo
 
   //Whether or not the text should be big
   private boolean isBigText = false;
+  
+  private boolean clickable;
+  
+  // Marquee flag for label
+  private boolean hasMarquee;
+  
+  // Marquee repeat limit, -1 is infinate
+  private int marqueeRepeatLimit;
+
+  private double rotationAngle = 0.0;
+
+  private String backgroundImage;
 
   /**
    * Creates a new Label component.
@@ -90,9 +132,14 @@ public final class Label extends AndroidViewComponent implements AccessibleCompo
   public Label(ComponentContainer container) {
     super(container);
     view = new TextView(container.$context());
+    this.container = container;
+    this.activity = container.$context();
 
     // Adds the component to its designated container
     container.$add(this);
+    
+    view.setOnClickListener(this);
+    view.setOnLongClickListener(this);
 
     // Get the layout parameters to use in setting margins (and potentially
     // other things.
@@ -121,6 +168,10 @@ public final class Label extends AndroidViewComponent implements AccessibleCompo
     TextColor(Component.COLOR_DEFAULT);
     HTMLFormat(false);
     HasMargins(true);
+    Clickable(false);
+    Marquee(false);
+    MarqueeRepeatLimit(-1);
+    BackgroundImage("");
   }
 
   // put this in the right file
@@ -464,6 +515,192 @@ private void setLabelMargins(boolean hasMargins) {
     } else {
       TextViewUtil.setTextColor(view, container.$form().isDarkTheme() ? Component.COLOR_WHITE : Component.COLOR_BLACK);
     }
+  }
+  
+  @SimpleProperty(category = PropertyCategory.BEHAVIOR)
+  public boolean Clickable() {
+    return clickable;
+  }
+  
+  @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_BOOLEAN,
+      defaultValue = "False")
+  @SimpleProperty
+  public void Clickable(boolean canClick) {
+    clickable = canClick;
+    view.setClickable(clickable);
+    view.setLongClickable(clickable);
+  }
+  
+  @SimpleProperty(
+      category = PropertyCategory.APPEARANCE)
+  public boolean Marquee() {
+    return hasMarquee;
+  }
+  
+  @DesignerProperty( editorType = PropertyTypeConstants.PROPERTY_TYPE_BOOLEAN,
+      defaultValue = "False")
+  @SimpleProperty
+  public void Marquee(boolean marquee) {
+    hasMarquee = marquee;
+    if(hasMarquee) {
+      //Set the view the single line
+      view.setSingleLine(true);
+      view.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+      view.setSelected(true);
+    } else {
+      view.setSingleLine(false);
+      view.setEllipsize(null);
+    }
+  }
+  
+  @SimpleProperty(
+      category = PropertyCategory.APPEARANCE)
+  public int MarqueeRepeatLimit() {
+    return marqueeRepeatLimit;
+  }
+  
+  @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_INTEGER,
+      defaultValue = "-1")
+  @SimpleProperty
+  public void MarqueeRepeatLimit(int limit) {
+    marqueeRepeatLimit = limit;
+    view.setMarqueeRepeatLimit(limit);
+  }
+
+  @SimpleProperty(category = PropertyCategory.APPEARANCE,
+      description = "Sets the degrees that the view is rotated around the pivot point. Increasing values result in clockwise rotation.")
+  public double RotationAngle() {
+    return rotationAngle;
+  }
+
+  @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_FLOAT, defaultValue = "0.0")
+  @SimpleProperty
+  public void RotationAngle(double angle) {
+    if(rotationAngle == angle) {
+      return;
+    }
+    if (SdkLevel.getLevel() < SdkLevel.LEVEL_HONEYCOMB) {
+      container.$form().dispatchErrorOccurredEvent(this, "RotationAngle",
+        ErrorMessages.ERROR_VIEW_CANNOT_ROTATE);
+      return;
+    }
+    HoneycombUtil.viewSetRotate(view, angle);
+    rotationAngle = angle;
+  }
+
+  /**
+   * Returns the path of the %type%'s' background image.
+   *
+   * @return  the path of the %type%'s background image
+   */
+  @SimpleProperty(
+      category = PropertyCategory.APPEARANCE,
+      description = "Set background image for %type%")
+  public String BackgroundImage() {
+    return backgroundImage;
+  }
+
+  /**
+   * Specifies the path of the `%type%`'s `BackgroundImage`.
+   * <br/><b>Note:</b> If your image has the extension `.9.png` it will not be displayed in the Designer
+   *
+   * @internaldoc
+   * <p/>See {@link MediaUtil#determineMediaSource} for information about what
+   * a path can be.
+   *
+   * @param path  the path of the %type%'s background image
+   */
+  @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_ASSET,
+      defaultValue = "")
+  @SimpleProperty
+  public void BackgroundImage(@Asset final String path) {
+    if (MediaUtil.isExternalFile(container.$context(), path)
+        && container.$form().isDeniedPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+      container.$form().askPermission(Manifest.permission.READ_EXTERNAL_STORAGE,
+          new PermissionResultHandler() {
+            @Override
+            public void HandlePermissionResponse(String permission, boolean granted) {
+              if (granted) {
+                BackgroundImage(path);
+              } else {
+                container.$form().dispatchPermissionDeniedEvent(Label.this, "BackgroundImage", permission);
+              }
+            }
+          });
+      return;
+    }
+    backgroundImage = (path == null) ? "" : path;
+    Drawable drawable = null;
+
+    //Check for 9-patch image and process with ninepatch library
+    if(!backgroundImage.isEmpty() && backgroundImage.endsWith(".9.png")) {
+      Bitmap bitmap;
+      try {
+        bitmap = BitmapFactory.decodeStream(MediaUtil.openMedia(this.container.$form(), backgroundImage));
+      } catch(Exception e) {
+        bitmap = null;
+      }
+      if(bitmap != null) {
+        byte[] chunk = bitmap.getNinePatchChunk();
+        if(NinePatch.isNinePatchChunk(chunk)) {
+          //Just use it
+          drawable = new NinePatchDrawable(this.container.$form().getResources(), bitmap, chunk, new Rect(), (String) null);
+          ViewUtil.setBackgroundImage(view, drawable);
+        } else {
+          //We know the intent generate it
+          drawable = NinePatchChunk.create9PatchDrawable(this.container.$form(), bitmap, (String) null);
+        }
+      }
+    } else {
+      try {
+        drawable = MediaUtil.getBitmapDrawable(container.$form(), backgroundImage);
+      } catch (IOException ioe) {
+        Log.e("Label", "Unable to load " + backgroundImage);
+        drawable = null;
+      }
+
+    }
+    ViewUtil.setBackgroundImage(view, drawable);
+
+  }
+  
+  @SimpleFunction(description = "Add a blurred shadow of text below text")
+  public void SetShadow(float x, float y, float radius, @IsColor int color) {
+    TextViewUtil.setShadowLayer(view, radius, x, y, color);
+  }
+  
+  @SimpleFunction(description = "Allows you to set animation style. Valid (case-insensitive) values are: "
+      + "FadeIn, FadeOut, Flip, Bounce, Blink, ZoomIn, ZoomOut, Rotate, Move, "
+      + "SlideDown, SlideUp. If invalid style is used, animation will be removed.")
+  public void StartAnimation(String style) {
+    if(!TextViewUtil.setAnimation(view, activity, style)) {
+      StopAnimation();
+    }
+  }
+  
+  @SimpleFunction(description = "Stop currently running animations if any")
+  public void StopAnimation() {
+    TextViewUtil.stopAnimation(view);
+  }
+  
+  @SimpleEvent(description = "Triggered when label has been clicked on if Clickable is set")
+  public void Click() {
+    EventDispatcher.dispatchEvent(this, "Click");
+  }
+  
+  @SimpleEvent(description = "Triggered when label has been long clicked on if Clickable is set")
+  public boolean LongClick() {
+    return EventDispatcher.dispatchEvent(this, "LongClick");
+  }
+  
+  @Override
+  public void onClick(View v) {
+    Click();
+  }
+  
+  @Override
+  public boolean onLongClick(View v) {
+    return LongClick();
   }
 
   @Override

@@ -1773,6 +1773,19 @@ public final class Compiler {
     files.put("slide_v_enter.xml", AnimationXmlConstants.SLIDE_V_ENTER);
     files.put("slide_v_exit_reverse.xml", AnimationXmlConstants.SLIDE_V_EXIT_REVERSE);
     files.put("slide_v_enter_reverse.xml", AnimationXmlConstants.SLIDE_V_ENTER_REVERSE);
+    
+    //Label styles
+    files.put("fade_in.xml", AnimationXmlConstants.FADE_IN);
+    files.put("fade_out.xml", AnimationXmlConstants.FADE_OUT);
+    files.put("zoom_in.xml", AnimationXmlConstants.ZOOM_IN);
+    files.put("zoom_out.xml", AnimationXmlConstants.ZOOM_OUT);
+    files.put("bounce.xml", AnimationXmlConstants.BOUNCE);
+    files.put("blink.xml", AnimationXmlConstants.BLINK);
+    files.put("slide_down.xml", AnimationXmlConstants.SLIDE_DOWN);
+    files.put("slide_up.xml", AnimationXmlConstants.SLIDE_UP);
+    files.put("move.xml", AnimationXmlConstants.MOVE);
+    files.put("rotate.xml", AnimationXmlConstants.ROTATE);
+    files.put("flip.xml", AnimationXmlConstants.FLIP);
 
     for (String filename : files.keySet()) {
       File file = new File(animDir, filename);

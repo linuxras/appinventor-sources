@@ -1309,6 +1309,13 @@ public final class YoungAndroidFormUpgrader {
     if (srcCompVersion < 5) {
       srcCompVersion = 5;
     }
+    if(srcCompVersion < 6) {
+      componentProperties.put("Clickable", new ClientJsonString("False"));
+      componentProperties.put("Marquee", new ClientJsonString("False"));
+      componentProperties.put("MarqueeRepeatLimit", new ClientJsonString("-1"));
+      componentProperties.put("RotationAngle", new ClientJsonString("0.0"));
+      srcCompVersion = 6;
+    }
     return srcCompVersion;
   }
 
@@ -1423,6 +1430,12 @@ public final class YoungAndroidFormUpgrader {
     if (srcCompVersion < 5) {
       // Added NumbersOnly property
       srcCompVersion = 5;
+    }
+    if(srcCompVersion < 6) {
+        // Added Animation and text shadow functions
+      componentProperties.put("BackgroundImage", new ClientJsonString(""));
+      componentProperties.put("RotationAngle", new ClientJsonString("0.0"));
+      srcCompVersion = 6;
     }
     return srcCompVersion;
   }
@@ -1754,6 +1767,12 @@ public final class YoungAndroidFormUpgrader {
     if (srcCompVersion < 6) {
       // ReadOnly property was added
       srcCompVersion = 6;
+    }
+    if(srcCompVersion < 7) {
+        // Added Animation and text shadow functions
+      componentProperties.put("BackgroundImage", new ClientJsonString(""));
+      componentProperties.put("RotationAngle", new ClientJsonString("0.0"));
+      srcCompVersion = 7;
     }
     return srcCompVersion;
   }

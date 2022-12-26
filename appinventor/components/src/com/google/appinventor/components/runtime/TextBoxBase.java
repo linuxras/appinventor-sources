@@ -6,8 +6,7 @@
 
 package com.google.appinventor.components.runtime;
 
-import android.graphics.Color;
-import android.graphics.PorterDuff;
+import com.google.appinventor.components.annotations.Asset;
 import com.google.appinventor.components.annotations.DesignerProperty;
 import com.google.appinventor.components.annotations.IsColor;
 import com.google.appinventor.components.annotations.PropertyCategory;
@@ -15,18 +14,43 @@ import com.google.appinventor.components.annotations.SimpleEvent;
 import com.google.appinventor.components.annotations.SimpleFunction;
 import com.google.appinventor.components.annotations.SimpleObject;
 import com.google.appinventor.components.annotations.SimpleProperty;
+import com.google.appinventor.components.annotations.UsesPermissions;
+import com.google.appinventor.components.annotations.UsesLibraries;
 import com.google.appinventor.components.common.ComponentConstants;
 import com.google.appinventor.components.common.PropertyTypeConstants;
+import com.google.appinventor.components.runtime.util.ErrorMessages;
 import com.google.appinventor.components.runtime.util.EclairUtil;
 import com.google.appinventor.components.runtime.util.TextViewUtil;
+import com.google.appinventor.components.runtime.util.HoneycombUtil;
+import com.google.appinventor.components.runtime.util.MediaUtil;
+import com.google.appinventor.components.runtime.util.SdkLevel;
 import com.google.appinventor.components.runtime.util.ViewUtil;
 
 //import com.google.appinventor.components.runtime.parameters.BooleanReferenceParameter;
+import android.Manifest;
+import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Rect;
+import android.graphics.NinePatch;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.NinePatchDrawable;
 import android.os.Build;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
+import android.view.KeyEvent;
 import android.widget.EditText;
+import android.widget.TextView;
+import ua.anatolii.graphics.ninepatch.NinePatchChunk;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Underlying base class for TextBox, not directly accessible to Simple
@@ -36,8 +60,12 @@ import android.widget.EditText;
  */
 
 @SimpleObject
+@UsesPermissions(permissionNames = "android.permission.INTERNET," +
+    "android.permission.READ_EXTERNAL_STORAGE")
+@UsesLibraries(libraries = "ninepatch.jar, ninepatch.aar")
 public abstract class TextBoxBase extends AndroidViewComponent
-    implements OnFocusChangeListener, AccessibleComponent {
+    implements OnFocusChangeListener, AccessibleComponent, TextWatcher, 
+               TextView.OnEditorActionListener {
 
   protected final EditText view;
 
@@ -74,6 +102,18 @@ public abstract class TextBoxBase extends AndroidViewComponent
   //The default text color of the textbox hint, according to theme
   private int hintColorDefault;
 
+  private double rotationAngle = 0.0;
+
+  // If true, then all text in textbox will be highlighted on focus
+  private boolean selectAllOnFocus;
+
+  //The text to show in error popup
+  private String errorText;
+
+  private List<Integer> enterActionIds = Arrays.asList(2, 3, 4, 5, 6, 7);
+
+  private String backgroundImage;
+
   /**
    * Creates a new TextBoxBase component
    *
@@ -95,6 +135,9 @@ public abstract class TextBoxBase extends AndroidViewComponent
 
     // Listen to focus changes
     view.setOnFocusChangeListener(this);
+    view.setOnEditorActionListener(this);
+    // Listen to text changes
+    view.addTextChangedListener(this);
 
     defaultTextBoxDrawable = view.getBackground();
 
@@ -131,6 +174,9 @@ public abstract class TextBoxBase extends AndroidViewComponent
     Text("");
     TextColor(Component.COLOR_DEFAULT);
     BackgroundColor(Component.COLOR_DEFAULT);
+    SelectAllOnFocus(false);
+    ErrorText("");
+    BackgroundImage("");
   }
 
   @Override
@@ -499,6 +545,122 @@ public abstract class TextBoxBase extends AndroidViewComponent
     }
   }
 
+  @SimpleProperty(
+    category = PropertyCategory.BEHAVIOR,
+    description = "Set the %type% so that when it takes focus, all the text is selected."
+  )
+  public boolean SelectAllOnFocus() {
+    return selectAllOnFocus;
+  }
+
+  @DesignerProperty(
+    editorType = PropertyTypeConstants.PROPERTY_TYPE_BOOLEAN,
+    defaultValue = "False"
+  )
+  @SimpleProperty
+  public void SelectAllOnFocus(boolean selectAllOnFocus) {
+    this.selectAllOnFocus = selectAllOnFocus;
+    view.setSelectAllOnFocus(selectAllOnFocus);
+  }
+  
+  @SimpleProperty(
+    category = PropertyCategory.APPEARANCE,
+    description = "Sets the right-hand compound drawable of the %type% to the \"error\" icon" +
+    " and sets an error message that will be displayed in a popup when the %type% has focus. "
+  )
+  public String ErrorText() {
+    return errorText;
+  }
+
+  @DesignerProperty(
+    editorType = PropertyTypeConstants.PROPERTY_TYPE_TEXTAREA,
+    defaultValue = ""
+  )
+  @SimpleProperty
+  public void ErrorText(String errorText) {
+    this.errorText = errorText;
+    if(errorText.isEmpty()) {
+        this.errorText = null;
+    }
+    view.setError(this.errorText);
+  }
+
+  /**
+   * Returns the path of the %type%'s' background image.
+   *
+   * @return  the path of the %type%'s background image
+   */
+  @SimpleProperty(
+      category = PropertyCategory.APPEARANCE,
+      description = "Set background image for %type%")
+  public String BackgroundImage() {
+    return backgroundImage;
+  }
+
+  /**
+   * Specifies the path of the `%type%`'s `BackgroundImage`.
+   * <br/><b>Note:</b> If your image has the extension `.9.png` it will not be displayed in the Designer
+   *
+   * @internaldoc
+   * <p/>See {@link MediaUtil#determineMediaSource} for information about what
+   * a path can be.
+   *
+   * @param path  the path of the %type%'s background image
+   */
+  @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_ASSET,
+      defaultValue = "")
+  @SimpleProperty
+  public void BackgroundImage(@Asset final String path) {
+    if (MediaUtil.isExternalFile(container.$context(), path)
+        && container.$form().isDeniedPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+      container.$form().askPermission(Manifest.permission.READ_EXTERNAL_STORAGE,
+          new PermissionResultHandler() {
+            @Override
+            public void HandlePermissionResponse(String permission, boolean granted) {
+              if (granted) {
+                BackgroundImage(path);
+              } else {
+                container.$form().dispatchPermissionDeniedEvent(TextBoxBase.this, "BackgroundImage", permission);
+              }
+            }
+          });
+      return;
+    }
+    backgroundImage = (path == null) ? "" : path;
+    Drawable drawable = null;
+
+    //Check for 9-patch image and process with ninepatch library
+    if(!backgroundImage.isEmpty() && backgroundImage.endsWith(".9.png")) {
+      Bitmap bitmap;
+      try {
+        bitmap = BitmapFactory.decodeStream(MediaUtil.openMedia(this.container.$form(), backgroundImage));
+      } catch(Exception e) {
+        bitmap = null;
+      }
+      if(bitmap != null) {
+        byte[] chunk = bitmap.getNinePatchChunk();
+        if(NinePatch.isNinePatchChunk(chunk)) {
+          //Just use it
+          drawable = new NinePatchDrawable(this.container.$form().getResources(), bitmap, chunk, new Rect(), (String) null);
+          ViewUtil.setBackgroundImage(view, drawable);
+        } else {
+          //We know the intent generate it
+          drawable = NinePatchChunk.create9PatchDrawable(this.container.$form(), bitmap, (String) null);
+        }
+      }
+    } else {
+      try {
+        drawable = MediaUtil.getBitmapDrawable(container.$form(), backgroundImage);
+      } catch (IOException ioe) {
+        Log.e("Label", "Unable to load " + backgroundImage);
+        drawable = null;
+      }
+
+    }
+    ViewUtil.setBackgroundImage(view, drawable);
+
+  }
+
   /**
    * Request focus to current `%type%`.
    */
@@ -506,6 +668,78 @@ public abstract class TextBoxBase extends AndroidViewComponent
     description = "Sets the %type% active.")
   public void RequestFocus() {
     view.requestFocus();
+  }
+  
+  @SimpleFunction(description = "Allows you to set animation style. Valid (case-insensitive) values are: "
+      + "FadeIn, FadeOut, Flip, Bounce, Blink, ZoomIn, ZoomOut, Rotate, Move, "
+      + "SlideDown, SlideUp. If invalid style is used, animation will be removed.")
+  public void StartAnimation(String style) {
+    if(!TextViewUtil.setAnimation(view, container.$context(), style)) {
+      StopAnimation();
+    }
+  }
+  
+  @SimpleFunction(description = "Stop currently running animations if any")
+  public void StopAnimation() {
+    TextViewUtil.stopAnimation(view);
+  }
+
+  @SimpleProperty(category = PropertyCategory.APPEARANCE,
+      description = "Sets the degrees that the view is rotated around the pivot point. Increasing values result in clockwise rotation.")
+  public double RotationAngle() {
+    return rotationAngle;
+  }
+
+  @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_FLOAT, defaultValue = "0.0")
+  @SimpleProperty
+  public void RotationAngle(double angle) {
+    if(rotationAngle == angle) {
+      return;
+    }
+    if (SdkLevel.getLevel() < SdkLevel.LEVEL_HONEYCOMB) {
+      container.$form().dispatchErrorOccurredEvent(this, "RotationAngle",
+        ErrorMessages.ERROR_VIEW_CANNOT_ROTATE);
+      return;
+    }
+    HoneycombUtil.viewSetRotate(view, angle);
+    rotationAngle = angle;
+  }
+
+  @SimpleFunction(description = "Highlights all text in this %type%")
+  public void SelectAll() {
+      view.selectAll();
+  }
+
+  @SimpleFunction(description = "Set the cursor to the given position.")
+  public void SetCursorAt(int position) {
+    int len = view.getText().length();
+    if(len >= (position - 1)) {
+      view.setSelection((position - 1));
+    } else {
+      SetCursorAtEnd();
+    }
+  }
+
+  @SimpleFunction(description = "Set the cursor position to the end")
+  public void SetCursorAtEnd() {
+    int len = view.getText().length();
+    view.setSelection(len);
+  }
+
+  /**
+   * Event raised when text has changed in `%type%`.
+   */
+  @SimpleEvent(description = "Event raised when the text has been changed in %type%.")
+  public void TextChanged() {
+    EventDispatcher.dispatchEvent(this, "TextChanged");
+  }
+
+  /**
+   * Event raised when Enter has been pressed in `%type%`.
+   */
+  @SimpleEvent(description = "Event raised when Enter has been pressed in %type%.")
+  public void EnterPressed() {
+    EventDispatcher.dispatchEvent(this, "EnterPressed");
   }
 
   // OnFocusChangeListener implementation
@@ -570,5 +804,35 @@ public abstract class TextBoxBase extends AndroidViewComponent
   @Override
   public boolean getLargeFont() {
     return isBigText;
+  }
+
+  //TextWatcher implementation
+
+  @Override
+  public void beforeTextChanged (CharSequence s, int start, int count, int after) {}
+
+  @Override
+  public void onTextChanged (CharSequence s, int start, int before, int count) {}
+
+  @Override
+  public void afterTextChanged (Editable s) {
+      container.$form().runOnUiThread(new Runnable() {
+          public void run() {
+              TextBoxBase.this.TextChanged();
+          }
+      });
+  }
+
+  // Listen for enter key
+  public boolean onEditorAction (TextView v, int actionId, KeyEvent event) {
+      if(enterActionIds.contains(actionId)) {
+          container.$form().runOnUiThread(new Runnable() {
+              public void run() {
+                  TextBoxBase.this.EnterPressed();
+              }
+          });
+          return true;
+      }
+      return false;
   }
 }

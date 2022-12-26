@@ -182,6 +182,8 @@
     <!-- END Android Support Libraries -->
     <copy toFile="${public.deps.dir}/android.jar" file="${android.lib}" />
     <copy toFile="${public.deps.dir}/CommonVersion.jar" file="${build.dir}/common/CommonVersion.jar" />
+    <copy toFile="${public.deps.dir}/ninepatch.jar" file="${lib.dir}/ninepatch/ninepatch-1.0.jar" />
+    <copy toFile="${public.deps.dir}/ninepatch.aar" file="${lib.dir}/ninepatch/ninepatch-1.0.aar" />
 
     <!-- Add extension libraries here -->
     <!-- Example: <copy toFile="${public.deps.dir}/my-dependency.jar" file="${lib.dir}/my-dependency/my-dependency-1.0.0.jar" /> -->

@@ -435,6 +435,13 @@ Labels are components used to show text.
 : Specifies the label's background color as an alpha-red-green-blue
  integer.
 
+{:id="Label.BackgroundImage" .text} *BackgroundImage*
+: Specifies the path of the `Label`'s `BackgroundImage`.
+ <br/><b>Note:</b> If your image has the extension `.9.png` it will not be displayed in the Designer
+
+{:id="Label.Clickable" .boolean} *Clickable*
+: Property for Clickable
+
 {:id="Label.FontBold" .boolean .do} *FontBold*
 : Specifies whether the label's text should be bold.
  Some fonts do not support bold.
@@ -470,6 +477,15 @@ Labels are components used to show text.
 : Specifies the `Label`'s vertical height as a percentage
  of the [`Screen`'s `Height`](userinterface.html#Screen.Height).
 
+{:id="Label.Marquee" .boolean} *Marquee*
+: Property for Marquee
+
+{:id="Label.MarqueeRepeatLimit" .number} *MarqueeRepeatLimit*
+: Property for MarqueeRepeatLimit
+
+{:id="Label.RotationAngle" .number} *RotationAngle*
+: Sets the degrees that the view is rotated around the pivot point. Increasing values result in clockwise rotation.
+
 {:id="Label.Text" .text} *Text*
 : Specifies the text displayed by the label.
 
@@ -496,14 +512,25 @@ Labels are components used to show text.
 ### Events  {#Label-Events}
 
 {:.events}
-None
 
+{:id="Label.Click"} Click()
+: Triggered when label has been clicked on if Clickable is set
+
+{:id="Label.LongClick"} LongClick()
+: Triggered when label has been long clicked on if Clickable is set
 
 ### Methods  {#Label-Methods}
 
 {:.methods}
-None
 
+{:id="Label.SetShadow" class="method"} <i/> SetShadow(*x*{:.number},*y*{:.number},*radius*{:.number},*color*{:.color})
+: Add a blurred shadow of text below text
+
+{:id="Label.StartAnimation" class="method"} <i/> StartAnimation(*style*{:.text})
+: Allows you to set animation style. Valid (case-insensitive) values are: FadeIn, FadeOut, Flip, Bounce, Blink, ZoomIn, ZoomOut, Rotate, Move, SlideDown, SlideUp. If invalid style is used, animation will be removed.
+
+{:id="Label.StopAnimation" class="method"} <i/> StopAnimation()
+: Stop currently running animations if any
 
 ## ListPicker  {#ListPicker}
 
@@ -903,8 +930,15 @@ Users enter passwords in a password text box component, which hides the text tha
 : The background color of the `PasswordTextBox``. You can choose a color by name in the Designer or in
  the Blocks Editor. The default background color is 'default' (shaded 3-D look).
 
+{:id="PasswordTextBox.BackgroundImage" .text} *BackgroundImage*
+: Specifies the path of the `PasswordTextBox`'s `BackgroundImage`.
+ <br/><b>Note:</b> If your image has the extension `.9.png` it will not be displayed in the Designer
+
 {:id="PasswordTextBox.Enabled" .boolean} *Enabled*
 : If set, user can enter text into the `PasswordTextBox`.
+
+{:id="PasswordTextBox.ErrorText" .text} *ErrorText*
+: Sets the right-hand compound drawable of the PasswordTextBox to the "error" icon and sets an error message that will be displayed in a popup when the PasswordTextBox has focus.
 
 {:id="PasswordTextBox.FontBold" .boolean .do} *FontBold*
 : Specifies whether the text of the `PasswordTextBox` should be bold.
@@ -940,6 +974,12 @@ Users enter passwords in a password text box component, which hides the text tha
 {:id="PasswordTextBox.PasswordVisible" .boolean .bo} *PasswordVisible*
 : Specifies whether the password is hidden (default) or shown.
 
+{:id="PasswordTextBox.RotationAngle" .number} *RotationAngle*
+: Sets the degrees that the view is rotated around the pivot point. Increasing values result in clockwise rotation.
+
+{:id="PasswordTextBox.SelectAllOnFocus" .boolean} *SelectAllOnFocus*
+: Set the PasswordTextBox so that when it takes focus, all the text is selected.
+
 {:id="PasswordTextBox.Text" .text} *Text*
 : The text in the `PasswordTextBox`, which can be set by the programmer in the Designer or Blocks Editor,
  or it can be entered by the user (unless the [`Enabled`](#PasswordTextBox.Enabled) property is false).
@@ -969,6 +1009,9 @@ Users enter passwords in a password text box component, which hides the text tha
 
 {:.events}
 
+{:id="PasswordTextBox.EnterPressed"} EnterPressed()
+: Event raised when Enter has been pressed in `PasswordTextBox`.
+
 {:id="PasswordTextBox.GotFocus"} GotFocus()
 : Event raised when the `PasswordTextBox` is selected for input, such as by
  the user touching it.
@@ -977,12 +1020,30 @@ Users enter passwords in a password text box component, which hides the text tha
 : Event raised when the `PasswordTextBox` is no longer selected for input, such
  as if the user touches a different text box.
 
+{:id="PasswordTextBox.TextChanged"} TextChanged()
+: Event raised when text has changed in `PasswordTextBox`.
+
 ### Methods  {#PasswordTextBox-Methods}
 
 {:.methods}
 
 {:id="PasswordTextBox.RequestFocus" class="method"} <i/> RequestFocus()
 : Request focus to current `PasswordTextBox`.
+
+{:id="PasswordTextBox.SelectAll" class="method"} <i/> SelectAll()
+: Highlights all text in this PasswordTextBox
+
+{:id="PasswordTextBox.SetCursorAt" class="method"} <i/> SetCursorAt(*position*{:.number})
+: Set the cursor to the given position.
+
+{:id="PasswordTextBox.SetCursorAtEnd" class="method"} <i/> SetCursorAtEnd()
+: Set the cursor position to the end
+
+{:id="PasswordTextBox.StartAnimation" class="method"} <i/> StartAnimation(*style*{:.text})
+: Allows you to set animation style. Valid (case-insensitive) values are: FadeIn, FadeOut, Flip, Bounce, Blink, ZoomIn, ZoomOut, Rotate, Move, SlideDown, SlideUp. If invalid style is used, animation will be removed.
+
+{:id="PasswordTextBox.StopAnimation" class="method"} <i/> StopAnimation()
+: Stop currently running animations if any
 
 ## Screen  {#Screen}
 
@@ -1478,8 +1539,15 @@ Users enter text in a text box component.
 : The background color of the `TextBox``. You can choose a color by name in the Designer or in
  the Blocks Editor. The default background color is 'default' (shaded 3-D look).
 
+{:id="TextBox.BackgroundImage" .text} *BackgroundImage*
+: Specifies the path of the `TextBox`'s `BackgroundImage`.
+ <br/><b>Note:</b> If your image has the extension `.9.png` it will not be displayed in the Designer
+
 {:id="TextBox.Enabled" .boolean} *Enabled*
 : If set, user can enter text into the `TextBox`.
+
+{:id="TextBox.ErrorText" .text} *ErrorText*
+: Sets the right-hand compound drawable of the TextBox to the "error" icon and sets an error message that will be displayed in a popup when the TextBox has focus.
 
 {:id="TextBox.FontBold" .boolean .do} *FontBold*
 : Specifies whether the text of the `TextBox` should be bold.
@@ -1521,6 +1589,12 @@ Users enter text in a text box component.
 {:id="TextBox.ReadOnly" .boolean} *ReadOnly*
 : Whether the TextBox is read-only. By default, this is `true`{:.logic.block}.
 
+{:id="TextBox.RotationAngle" .number} *RotationAngle*
+: Sets the degrees that the view is rotated around the pivot point. Increasing values result in clockwise rotation.
+
+{:id="TextBox.SelectAllOnFocus" .boolean} *SelectAllOnFocus*
+: Set the TextBox so that when it takes focus, all the text is selected.
+
 {:id="TextBox.Text" .text} *Text*
 : The text in the `TextBox`, which can be set by the programmer in the Designer or Blocks Editor,
  or it can be entered by the user (unless the [`Enabled`](#TextBox.Enabled) property is false).
@@ -1550,6 +1624,9 @@ Users enter text in a text box component.
 
 {:.events}
 
+{:id="TextBox.EnterPressed"} EnterPressed()
+: Event raised when Enter has been pressed in `TextBox`.
+
 {:id="TextBox.GotFocus"} GotFocus()
 : Event raised when the `TextBox` is selected for input, such as by
  the user touching it.
@@ -1557,6 +1634,9 @@ Users enter text in a text box component.
 {:id="TextBox.LostFocus"} LostFocus()
 : Event raised when the `TextBox` is no longer selected for input, such
  as if the user touches a different text box.
+
+{:id="TextBox.TextChanged"} TextChanged()
+: Event raised when text has changed in `TextBox`.
 
 ### Methods  {#TextBox-Methods}
 
@@ -1568,6 +1648,24 @@ Users enter text in a text box component.
 
 {:id="TextBox.RequestFocus" class="method"} <i/> RequestFocus()
 : Request focus to current `TextBox`.
+
+{:id="TextBox.SelectAll" class="method"} <i/> SelectAll()
+: Highlights all text in this TextBox
+
+{:id="TextBox.SetCursorAt" class="method"} <i/> SetCursorAt(*position*{:.number})
+: Set the cursor to the given position.
+
+{:id="TextBox.SetCursorAtEnd" class="method"} <i/> SetCursorAtEnd()
+: Set the cursor position to the end
+
+{:id="TextBox.SetShadow" class="method"} <i/> SetShadow(*x*{:.number},*y*{:.number},*radius*{:.number},*color*{:.color})
+: Add a blurred shadow of text below text
+
+{:id="TextBox.StartAnimation" class="method"} <i/> StartAnimation(*style*{:.text})
+: Allows you to set animation style. Valid (case-insensitive) values are: FadeIn, FadeOut, Flip, Bounce, Blink, ZoomIn, ZoomOut, Rotate, Move, SlideDown, SlideUp. If invalid style is used, animation will be removed.
+
+{:id="TextBox.StopAnimation" class="method"} <i/> StopAnimation()
+: Stop currently running animations if any
 
 ## TimePicker  {#TimePicker}
 
