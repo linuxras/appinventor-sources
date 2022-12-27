@@ -68,7 +68,6 @@ public class SettingsConstants {
   public static final String YOUNG_ANDROID_SETTINGS_SPLASH_SCREEN_COLOR = "SplashScreenColor";
   public static final String YOUNG_ANDROID_SETTINGS_KEEP_SCREEN_ON = "KeepScreenOn";
   public static final String YOUNG_ANDROID_SETTINGS_CLEARTEXT_TRAFFIC ="UseClearTextTraffic";
-  public static final String YOUNG_ANDROID_SETTINGS_FORCE_DARK_ALLOWED ="ForceDarkAllowed";
 
   /**
    * Settings for the Blocks editor.

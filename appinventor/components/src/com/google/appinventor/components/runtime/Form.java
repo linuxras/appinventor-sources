@@ -456,7 +456,6 @@ public class Form extends AppInventorCompatActivity
     SplashScreenColor(DEFAULT_SPLASH_SCREEN_COLOR);
     KeepScreenOn(false);
     UseClearTextTraffic(true);
-    ForceDarkAllowed(true);
   }
 
   @Override
@@ -2169,13 +2168,6 @@ public class Form extends AppInventorCompatActivity
   @SimpleProperty(userVisible = false, description = "Toggle cleartextTrafficPermitted network config flag",
       category = PropertyCategory.BEHAVIOR)
   public void UseClearTextTraffic(boolean clearText) {
-    //Do nothing as this is handled during app package
-  }
-  
-  @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_BOOLEAN, defaultValue = "True")
-  @SimpleProperty(userVisible = false, description = "Toggle forceDarkAllowed theme config flag",
-      category = PropertyCategory.BEHAVIOR)
-  public void ForceDarkAllowed(boolean clearText) {
     //Do nothing as this is handled during app package
   }
 

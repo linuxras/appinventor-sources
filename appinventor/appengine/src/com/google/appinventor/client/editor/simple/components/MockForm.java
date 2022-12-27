@@ -361,7 +361,6 @@ public final class MockForm extends MockContainer {
   private static final String PROPERTY_NAME_SPLASH_SCREEN_COLOR = "SplashScreenColor";
   private static final String PROPERTY_NAME_KEEP_SCREEN_ON = "KeepScreenOn";
   private static final String PROPERTY_NAME_CLEARTEXT_TRAFFIC = "UseClearTextTraffic";
-  private static final String PROPERTY_NAME_FORCE_DARK_ALLOWED = "ForceDarkAllowed";
 
   // Form UI components
   AbsolutePanel formWidget;
@@ -1095,14 +1094,6 @@ public final class MockForm extends MockContainer {
           SettingsConstants.YOUNG_ANDROID_SETTINGS_CLEARTEXT_TRAFFIC, clearText);
     }
   }
-  
-  private void setForceDarkAllowed(String forceDark) {
-    if(editor.isScreen1()) {
-      editor.getProjectEditor().changeProjectSettingsProperty(
-          SettingsConstants.PROJECT_YOUNG_ANDROID_SETTINGS,
-          SettingsConstants.YOUNG_ANDROID_SETTINGS_FORCE_DARK_ALLOWED, forceDark);
-    }
-  }
 
   /**
    * Forces a re-layout of the child components of the container.
@@ -1478,8 +1469,6 @@ public final class MockForm extends MockContainer {
       setKeepScreenOn(newValue);
     } else if(propertyName.equals(PROPERTY_NAME_CLEARTEXT_TRAFFIC)) {
       setUseClearTextTraffic(newValue);
-    } else if(propertyName.equals(PROPERTY_NAME_FORCE_DARK_ALLOWED)) {
-      setForceDarkAllowed(newValue);
     }
   }
 
