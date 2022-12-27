@@ -100,6 +100,7 @@ public final class Project {
   private static final String SPLASH_IMAGE_TAG = "splash.image";
   private static final String SPLASH_COLOR_TAG = "splash.color";
   private static final String CLEAR_TEXT_TRAFFIC_TAG = "cleartextTrafficPermitted";
+  private static final String FORCE_DARK_ALLOWED_TAG = "forceDarkAllowed";
   private static final String DEFAULT_FILE_SCOPE = "defaultfilescope";
 
   private static final String DEFAULT_APP_NAME = "AI2 App"; // Do not leave it empty because even though it compiles
@@ -385,6 +386,20 @@ public final class Project {
     //the system does not seem to store False values in the scm file so null is false
     String clearText = properties.getProperty(CLEAR_TEXT_TRAFFIC_TAG);
     if(clearText != null && clearText.equalsIgnoreCase("True")) {
+      return true;
+    }
+    return false;
+  }
+  
+  /**
+   * Return the forceDarkAllowed flag
+   * 
+   * @return forceDarkAllowed 
+   */
+  public boolean getForceDarkAllowed() {
+    //the system does not seem to store False values in the scm file so null is false
+    String forceDark = properties.getProperty(FORCE_DARK_ALLOWED_TAG);
+    if(forceDark != null && forceDark.equalsIgnoreCase("True")) {
       return true;
     }
     return false;

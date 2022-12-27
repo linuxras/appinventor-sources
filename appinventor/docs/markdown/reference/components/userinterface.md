@@ -1101,6 +1101,9 @@ Top-level component containing all other components in the program.
 : Specifies the default scope used when components access files. Note that the [`File`](#File)
  component has its own property for controlling file scopes.
 
+{:id="Screen.ForceDarkAllowed" .boolean .wo .do} *ForceDarkAllowed*
+: Toggle forceDarkAllowed theme config flag
+
 {:id="Screen.Height" .number .ro .bo} *Height*
 : Returns the Screen height in pixels (y-size).
 

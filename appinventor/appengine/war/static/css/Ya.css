@@ -224,11 +224,11 @@ body {
 
 .ode-SourceStructureBox {
     height: calc(.69 * var(--box-height));
+    width: var(--small-box-width);
 }
 
 .ode-SourceStructureBox.ode-Box-body {
     overflow: hidden !important;
-    width: var(--small-box-width);
 }
 
 .ode-AssetListBox {

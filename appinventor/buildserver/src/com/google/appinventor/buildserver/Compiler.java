@@ -342,6 +342,7 @@ public final class Compiler {
   private final boolean isForEmulator;
   private final boolean includeDangerousPermissions;
   private final boolean useSplashScreen;
+  private static boolean forceDarkAllowed;
   private final Project project;
   private final PrintStream out;
   private final PrintStream err;
@@ -803,6 +804,8 @@ public final class Compiler {
     out.write("<item name=\"colorPrimary\">@color/colorPrimary</item>\n");
     out.write("<item name=\"colorPrimaryDark\">@color/colorPrimaryDark</item>\n");
     out.write("<item name=\"colorAccent\">@color/colorAccent</item>\n");
+    // Allows user to Enable/Disable forcing of DarkMode on thier apps
+    out.write("<item name=\"android:forceDarkAllowed\">"+Boolean.valueOf(forceDarkAllowed)+"</item>\n");
     boolean holo = sdk >= 11 && sdk < 21;
     boolean needsClassicSwitch = false;
     if (!parent.equals("android:Theme")) {
@@ -1873,6 +1876,7 @@ public final class Compiler {
     this.dexCacheDir = dexCacheDir;
     this.reporter = reporter;
     this.useSplashScreen = !project.getSplashScreenImage().isEmpty();
+    this.forceDarkAllowed = project.getForceDarkAllowed();
 
   }
 

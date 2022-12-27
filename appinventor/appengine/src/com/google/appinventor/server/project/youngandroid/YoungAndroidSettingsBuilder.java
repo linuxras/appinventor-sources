@@ -25,6 +25,7 @@ import static com.google.appinventor.shared.settings.SettingsConstants.YOUNG_AND
 import static com.google.appinventor.shared.settings.SettingsConstants.YOUNG_ANDROID_SETTINGS_SPLASH_SCREEN_COLOR;
 import static com.google.appinventor.shared.settings.SettingsConstants.YOUNG_ANDROID_SETTINGS_KEEP_SCREEN_ON;
 import static com.google.appinventor.shared.settings.SettingsConstants.YOUNG_ANDROID_SETTINGS_CLEARTEXT_TRAFFIC;
+import static com.google.appinventor.shared.settings.SettingsConstants.YOUNG_ANDROID_SETTINGS_FORCE_DARK_ALLOWED;
 import static com.google.appinventor.shared.youngandroid.YoungAndroidSourceAnalyzer.ASSETS_FOLDER;
 import static com.google.appinventor.shared.youngandroid.YoungAndroidSourceAnalyzer.SRC_FOLDER;
 
@@ -57,6 +58,7 @@ public class YoungAndroidSettingsBuilder {
   private String splashScreenColor = "0";
   private String keepScreenOn = "false";
   private String cleartextTrafficPermitted = "true";
+  private String forceDarkAllowed = "true";
 
   public YoungAndroidSettingsBuilder() {
   }
@@ -105,6 +107,8 @@ public class YoungAndroidSettingsBuilder {
         YOUNG_ANDROID_SETTINGS_KEEP_SCREEN_ON));
     cleartextTrafficPermitted = Strings.nullToEmpty(settings.getSetting(PROJECT_YOUNG_ANDROID_SETTINGS,
         YOUNG_ANDROID_SETTINGS_CLEARTEXT_TRAFFIC));
+    forceDarkAllowed = Strings.nullToEmpty(settings.getSetting(PROJECT_YOUNG_ANDROID_SETTINGS,
+        YOUNG_ANDROID_SETTINGS_FORCE_DARK_ALLOWED));
   }
 
   /**
@@ -134,6 +138,7 @@ public class YoungAndroidSettingsBuilder {
     splashScreenColor = properties.getProperty("splash.color", "");
     keepScreenOn = properties.getProperty("keepScreenOn", "false");
     cleartextTrafficPermitted = properties.getProperty("cleartextTrafficPermitted", "true");
+    forceDarkAllowed = properties.getProperty("forceDarkAllowed", "true");
   }
 
   public YoungAndroidSettingsBuilder setProjectName(String projectName) {
@@ -240,6 +245,11 @@ public class YoungAndroidSettingsBuilder {
     this.cleartextTrafficPermitted = cleartextTrafficPermitted;
     return this;
   }
+  
+  public YoungAndroidSettingsBuilder setForceDarkAllowed(String forceDarkAllowed) {
+    this.forceDarkAllowed = forceDarkAllowed;
+    return this;
+  }
 
   /**
    * Convert the internal settings into a JSON structure.
@@ -267,6 +277,7 @@ public class YoungAndroidSettingsBuilder {
     object.put(YOUNG_ANDROID_SETTINGS_SPLASH_SCREEN_COLOR, splashScreenColor);
     object.put(YOUNG_ANDROID_SETTINGS_KEEP_SCREEN_ON, keepScreenOn);
     object.put(YOUNG_ANDROID_SETTINGS_CLEARTEXT_TRAFFIC, cleartextTrafficPermitted);
+    object.put(YOUNG_ANDROID_SETTINGS_FORCE_DARK_ALLOWED, forceDarkAllowed);
     JSONObject wrapper = new JSONObject();
     wrapper.put(PROJECT_YOUNG_ANDROID_SETTINGS, object);
     return wrapper.toString();
@@ -303,6 +314,7 @@ public class YoungAndroidSettingsBuilder {
     addPropertyIfSet(result, "splash.color", splashScreenColor);
     addPropertyIfSet(result, "keepScreenOn", keepScreenOn);
     addPropertyIfSet(result, "cleartextTrafficPermitted", cleartextTrafficPermitted);
+    addPropertyIfSet(result, "forceDarkAllowed", forceDarkAllowed);
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     try {
       result.store(out, "");
@@ -351,6 +363,7 @@ public class YoungAndroidSettingsBuilder {
       result &= other.splashScreenColor.equals(splashScreenColor);
       result &= other.keepScreenOn.equals(keepScreenOn);
       result &= other.cleartextTrafficPermitted.equals(cleartextTrafficPermitted);
+      result &= other.forceDarkAllowed.equals(forceDarkAllowed);
       return result;
     }
     return false;
