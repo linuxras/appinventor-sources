@@ -745,6 +745,7 @@ public final class YaFormEditor extends SimpleEditor implements FormChangeListen
     // Set the properties box's content.
     PropertiesBox propertiesBox = PropertiesBox.getPropertiesBox();
     propertiesBox.setContent(designProperties);
+    propertiesBox.setSubHeader(designProperties.getCaption());
     updatePropertiesPanel(form.getSelectedComponents(), true);
     propertiesBox.setVisible(true);
     propertiesBox.scrollToTop();

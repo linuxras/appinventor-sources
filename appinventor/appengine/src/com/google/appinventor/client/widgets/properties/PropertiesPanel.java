@@ -11,6 +11,7 @@ import com.google.appinventor.client.explorer.project.ComponentDatabaseChangeLis
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 import java.util.List;
 import java.util.Map;
@@ -35,7 +36,7 @@ public class PropertiesPanel extends Composite implements ComponentDatabaseChang
 
     componentName = new Label("");
     componentName.setStyleName("ode-PropertiesComponentName");
-    outerPanel.add(componentName);
+    //outerPanel.add(componentName);
 
     panel = new VerticalPanel();
     panel.setWidth("100%");
@@ -89,6 +90,10 @@ public class PropertiesPanel extends Composite implements ComponentDatabaseChang
    */
   public void setPropertiesCaption(String name) {
     componentName.setText(name);
+  }
+
+  public Widget getCaption() {
+    return componentName;
   }
 
   @Override

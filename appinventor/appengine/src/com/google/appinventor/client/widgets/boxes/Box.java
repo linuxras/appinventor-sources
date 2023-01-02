@@ -208,6 +208,7 @@ public abstract class Box extends HandlerPanel {
   private final ScrollPanel scrollPanel;
   private final PushButton minimizeButton;
   private final PushButton menuButton;
+  private final SimplePanel subHeaderPanel;
   private final SimplePanel buttonPanel;
 
   // Indicates that the box height is changed through resize operations of the layout
@@ -368,6 +369,11 @@ public abstract class Box extends HandlerPanel {
       scrollPanel.addStyleName("ode-Box-body-padding");
     }
     scrollPanel.add(body);
+
+    subHeaderPanel = new SimplePanel();
+    subHeaderPanel.setStyleName("ode-Box-sub-header");
+    subHeaderPanel.setVisible(false);
+
     buttonPanel = new SimplePanel();
     buttonPanel.setStyleName("ode-Box-buttons");
     buttonPanel.setVisible(false);
@@ -375,6 +381,7 @@ public abstract class Box extends HandlerPanel {
     FlowPanel boxContainer = new FlowPanel();
     boxContainer.setStyleName("ode-Box-content");
     boxContainer.add(headerContainer);
+    boxContainer.add(subHeaderPanel);
     boxContainer.add(scrollPanel);
     boxContainer.add(buttonPanel);
 
@@ -431,6 +438,16 @@ public abstract class Box extends HandlerPanel {
       captionAlreadySeen = false;
     }
     captionLabel.setText(caption);
+  }
+
+  /**
+   * Adds a sub header that will not scroll away
+   *
+   * @params header
+   */
+  public void setSubHeader(Widget header) {
+      subHeaderPanel.setWidget(header);
+      subHeaderPanel.setVisible(true);
   }
   
   /**
