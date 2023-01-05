@@ -13,20 +13,18 @@
  * Most of the colors used are represented here
  * I will add any missing ones at a later date.
  */
-:root {
+.starynight {
     --border-color: hsl(0, 0%, 33%);
     --button-color: hsl(0, 0%, 67%);
     --bg-color: hsl(210, 4%, 10%);
     --light-bg-color: hsl(210, 2%, 23%);
     --title-color: hsl(200, 6%, 10%);
+    --light-title-color: hsl(200, 6%, 30%);
     --text-color: hsl(223, 15%, 91%);
     --text-sec-color: hsl(218, 5%, 71%);
     --text-dark-color: hsl(210, 2%, 23%);
     --danger-bg-color: hsl(356, 100%, 50%);
     --danger-hover-color: hsl(356, 100%, 65%);
-    --box-height: calc(100vh - 105px);
-    --palette-bpx-width: 240px;
-    --small-box-width: 222px;
 }
 
 /* Pretty background with particlejs
@@ -575,11 +573,11 @@ body.starynight {
 }
 
 .starynight .ode-PropertiesComponentName {
-  background-color: var(--light-bg-color);
+  background-color: var(--light-title-color);
   color: var(--text-color);
   font-size: 13px;
-  border-bottom: 1px solid var(--light-bg-color);
-  border-top: 1px solid var(--light-bg-color);
+  border-bottom: 1px solid var(--light-title-color);
+  border-top: 1px solid var(--light-title-color);
   padding: 9px 9px 8px 10px;
 }
 

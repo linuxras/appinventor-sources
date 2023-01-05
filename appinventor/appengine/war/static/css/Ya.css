@@ -6,6 +6,13 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  */
 
+
+:root {
+    --box-height: calc(100vh - 105px);
+    --palette-box-width: 240px;
+    --small-box-width: 222px;
+}
+
 /*
 Droid Sans has a bug in the size of its descenders:
 they get cut off in Windows.
