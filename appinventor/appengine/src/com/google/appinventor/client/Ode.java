@@ -2484,6 +2484,9 @@ public class Ode implements EntryPoint {
       tutorialPanel.setVisible(false);
       overDeckPanel.setCellWidth(tutorialPanel, "0%");
     }
+    if (currentFileEditor != null) {
+      currentFileEditor.resize();
+    }
   }
 
   /**
